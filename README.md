@@ -24,4 +24,4 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
 
 # Developing
 1. Install textual and numpy.
-2. Run `Terminal.py`
+2. Run `python3 terminal.py`
