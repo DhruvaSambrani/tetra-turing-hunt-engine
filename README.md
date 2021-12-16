@@ -21,3 +21,7 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
     - [] Display item interaction screen
     - [] Make interaction mechanics
 
+
+# Developing
+1. Install textual and numpy.
+2. Run `Terminal.py`
