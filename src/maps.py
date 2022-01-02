@@ -1,6 +1,7 @@
 import json
 import numpy as np
 
+
 currentmap = None
 
 class Map:

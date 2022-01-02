@@ -17,10 +17,11 @@ class Game:
     
     def run(self):
         layout = [
-            [sg.Text(self.title, expand_x=True, justification="center", font="Serif 30")],
+            [sg.Text(self.title, expand_x=True, justification="center", font="fira\ code 30")],
             [
                 sg.Frame(title="Pocket", layout=self.pocket.render(), expand_y=True, size=(200, 200), element_justification="center"),
                 sg.Text(maps.currentmap.render(self.viewsize[1], self.viewsize[0]), background_color="#282828", font=("Source Code Pro", 12), size=self.viewsize, justification="center", relief="groove", border_width=8, key="terminal"),
+                sg.Text(open("test", encoding="utf8").read(), background_color="#282828", font="fira\ code 16", size=(60,30), justification="center", relief="groove", border_width=8),
             ]
         ]
 
@@ -31,6 +32,7 @@ class Game:
                 use_default_focus=False,
                 finalize = True
         )
+        sg.set_options(scaling=2)
 
         # player controls
         window.bind("<KeyPress-w>", "up")
