@@ -1,6 +1,6 @@
 import json
 
-def ismovement(code):
+def movement(code):
     return {
         "Up:111": "up", 
         "Down:116": "down",
