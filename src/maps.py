@@ -6,18 +6,13 @@ currentmap = None
 
 class Map:
     def __init__(self, filepath):
+        with open(filepath, encoding = 'utf-8') as fh:
+            jsonobj = json.load(fh, strict=False)
 
-        # jsonobj = json.loads(open(itempath).read())
-        # self.raw = jsonobj["raw"]
-        # self.entry_pos = jsonobj["entry_pos"]
-
-        self.raw = open(filepath, encoding = "utf8").read() #raw txt data of map
-        self.fmt = np.stack([list(elt) for elt in self.raw.splitlines()]) #formatted map as np grid
+        self.fmt = np.stack([list(elt) for elt in jsonobj["raw"].splitlines()]) #formatted map as np grid
         self.r, self.c = self.fmt.shape #map size
-        self.pos = np.array([0, 0]) #player pos
+        self.pos = np.array(jsonobj["init_pos"]) #player pos
 
-    #vr, vc = viewport size
-    #sr, sc = player position
     def render(self, vr, vc):
 
         sr, sc = self.pos 
@@ -45,7 +40,7 @@ class Map:
 
         return "\n".join(["".join(elt) for elt in block.tolist()])
         
-    def move(self, code, viewsize):
+    def move(self, code, viewsize, isWalkable):
         
         dir = {
             "up": [-1, 0],
@@ -54,6 +49,9 @@ class Map:
             "right": [0, 1]
             }
 
-        self.pos += np.array(dir[code])
+        new_pos = self.pos + np.array(dir[code])
+
+        if isWalkable.get(self.fmt[new_pos[0]][new_pos[1]], False):
+            self.pos = new_pos
 
         return self.render(viewsize[1], viewsize[0])
