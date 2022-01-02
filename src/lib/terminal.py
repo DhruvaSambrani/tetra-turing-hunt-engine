@@ -10,17 +10,19 @@ class Game:
         self.surfaces = [Surface(os.path.join(surffolder, i)) for i in os.listdir(surffolder) if os.path.splitext(i)[1] == '.surface']
         self.walkables = [elt.character for elt in self.surfaces if elt.walkable]
 
-        self.maps = [Map(os.path.join(mapfolder, i)) for i in os.listdir(mapfolder) if os.path.splitext(i)[1] == '.map']
+        # self.maps = [Map(os.path.join(mapfolder, i)) for i in os.listdir(mapfolder) if os.path.splitext(i)[1] == '.map']
         self.items = [Item(os.path.join(itemsfolder, i)) for i in os.listdir(itemsfolder) if os.path.splitext(i)[1] == '.item']
         self.pocket = Pocket(self.items)
         self.viewsize = (61, 29)
 
         global active_map 
-        active_map = self.maps[0]
+        active_map = Map(os.path.join(mapfolder, "home.map"))
 
         sg.theme("dark")
 
     def run(self):
+        global active_map
+
         layout = [
             [sg.Text(self.title, expand_x=True, justification="center", font="Source\ Code\ Pro 15")],
             [
@@ -53,8 +55,13 @@ class Game:
             if event == sg.WIN_CLOSED or event == 'Exit':
                 break
             if event in ["up", "down", "left", "right"]:
-                window["terminal"].update(active_map.move(event, self.viewsize, self.walkables))
-
+                signal = active_map.move(event, self.viewsize, self.walkables)
+                
+                if isinstance(signal, Map): #map transition
+                    active_map = signal
+                    window["terminal"].update(active_map.render(self.viewsize[1], self.viewsize[0]))
+                else:
+                    window["terminal"].update(signal) 
         window.close()
 
 Game("Turing Hunt 2022").run()

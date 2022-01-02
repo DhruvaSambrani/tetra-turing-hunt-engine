@@ -1,17 +1,23 @@
 import json
+import os
 import numpy as np
 
 
 active_map = None
 
 class Map:
-    def __init__(self, filepath):
+    def __init__(self, filepath, pos = None):
         with open(filepath, encoding = 'utf-8') as fh:
             jsonobj = json.load(fh, strict=False)
 
+        self.name = jsonobj["name"]
         self.fmt = np.stack([list(elt) for elt in jsonobj["raw"].splitlines()]) #formatted map as np grid
         self.r, self.c = self.fmt.shape #map size
-        self.pos = np.array(jsonobj["init_pos"]) #player pos
+        self.pos = np.array(jsonobj["init_pos"]) if (pos is None) else pos #player pos
+
+        self.exits = jsonobj["exits"] #dict of exit coords and new map
+        self.exit_coords = [[int(x) for x in elt.split(",")] for elt in jsonobj["exits"].keys()] #list of exit points
+
 
     def render(self, vr, vc):
 
@@ -53,5 +59,10 @@ class Map:
 
         if self.fmt[new_pos[0]][new_pos[1]] in walkables:
             self.pos = new_pos
+
+            # check for map transitions
+            if any(elt == list(new_pos) for elt in self.exit_coords):
+                new_pos_key = ",".join(np.char.mod('%i', new_pos))
+                return Map(os.path.join("../assets/maps", self.exits[new_pos_key][0] + ".map"), self.exits[new_pos_key][1])
 
         return self.render(viewsize[1], viewsize[0])
