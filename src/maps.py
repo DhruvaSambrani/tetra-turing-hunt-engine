@@ -2,7 +2,7 @@ import json
 import numpy as np
 
 
-currentmap = None
+active_map = None
 
 class Map:
     def __init__(self, filepath):
