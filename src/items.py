@@ -1,42 +1,28 @@
 import json
+import PySimpleGUI as sg
 
-from rich.markdown import Markdown
-from rich.columns import Columns
-from rich.panel import Panel
-from rich.layout import Layout
 
-from textual.reactive import Reactive
-from textual.widget import Widget
-from textual.widgets import ScrollView
-
-class Item(Widget):
-    mouse_over = Reactive(False)
+class Item():
     def __init__(self, itempath):
         jsonobj = json.loads(open(itempath).read())
-        super().__init__(jsonobj["name"])
-        self.prompt = Markdown(jsonobj["promptmd"])
+        self.name = jsonobj["name"]
+        self.prompt = jsonobj["promptmd"]
         self.answerhash = jsonobj["answerhash"]
         self.collectable = jsonobj["collectable"]
 
     def render(self):
-        return Panel(self.name, style=("white on red" if self.mouse_over else "red"), expand=True)
+        return [
+            [sg.Text(i.name, justification='center', font='Serif 13')],
+            [sg.Text(i.prompt)]
+        ]
 
-    def on_enter(self):
-        self.mouse_over=True
-    
-    def on_leave(self):
-        self.mouse_over=False
-
-class Pocket(Widget):
-    itemlist = Reactive([])
-
-     def on_enter(self, event):
-        await self.forward_event(event)
+class Pocket():
+    def __init__(self, itemlist=None):
+        self.itemlist = itemlist if itemlist is not None else []
 
     def render(self):
-        l = Columns(self.itemlist, title="Pocket")
-        return l
-
+        return [[sg.Button(i.name, key=f"-ITEM-{i.name}", enable_events=True)] for i in self.itemlist]
+    
     def append(self, item):
         self.itemlist.append(item)
 
