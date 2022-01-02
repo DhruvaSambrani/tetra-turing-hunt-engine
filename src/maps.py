@@ -55,4 +55,4 @@ class Map:
 
         self.pos += np.array(dir[code])
 
-        return self.render(viewsize[1] - 1, viewsize[0] + 1)
+        return self.render(viewsize[1], viewsize[0])
