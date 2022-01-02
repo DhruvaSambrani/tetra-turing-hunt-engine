@@ -6,12 +6,15 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
 
 # Objectives
 
-- [ ] Start a terminal screen using Tk
+- [x] Start a terminal screen using PSGui
+- [ ] Handle `Surface`s
+    - [ ] Read surfaces.json and load all `Surface`s
+
 - [ ] Make a map displaying logic
     - [x] Read map from file and display it on terminal screen
     - [ ] Read map metadata
     - [x] Capture and react to the user movement input
-    - [ ] Make sure map can be traversed only as expected
+    - [ ] Make sure map can be traversed only on `walkable` `Surface`s
     - [ ] Make map to map transitions
     - [ ] Emit events for code to listen to
 
@@ -23,5 +26,5 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
 
 
 # Developing
-1. Install textual and numpy.
+1. Install PySimpleGUI and numpy
 2. Run `python3 terminal.py`
