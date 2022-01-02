@@ -8,7 +8,7 @@ class Game:
     def __init__(self, title, mapfolder="./maps/", surffolder = "./surfaces/", itemsfolder="./items/", theme="Dark"):
         self.title = title
         self.surfaces = [Surface(os.path.join(surffolder, i)) for i in os.listdir(surffolder) if os.path.splitext(i)[1] == '.surface']
-        self.isWalkable = {elt.character:elt.walkable for elt in self.surfaces}
+        self.walkables = [elt.character for elt in self.surfaces if elt.walkable]
 
         self.maps = [Map(os.path.join(mapfolder, i)) for i in os.listdir(mapfolder) if os.path.splitext(i)[1] == '.map']
         self.items = [Item(os.path.join(itemsfolder,i)) for i in os.listdir(itemsfolder) if os.path.splitext(i)[1] == '.item']
@@ -17,7 +17,7 @@ class Game:
 
         global active_map 
         active_map = self.maps[0]
-        
+
         sg.theme("dark")
 
     def run(self):
@@ -53,7 +53,7 @@ class Game:
             if event == sg.WIN_CLOSED or event == 'Exit':
                 break
             if event in ["up", "down", "left", "right"]:
-                window["terminal"].update(active_map.move(event, self.viewsize, self.isWalkable))
+                window["terminal"].update(active_map.move(event, self.viewsize, self.walkables))
 
         window.close()
 

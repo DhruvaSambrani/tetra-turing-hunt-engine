@@ -40,7 +40,7 @@ class Map:
 
         return "\n".join(["".join(elt) for elt in block.tolist()])
         
-    def move(self, code, viewsize, isWalkable):
+    def move(self, code, viewsize, walkables):
         
         dir = {
             "up": [-1, 0],
@@ -51,7 +51,7 @@ class Map:
 
         new_pos = self.pos + np.array(dir[code])
 
-        if isWalkable.get(self.fmt[new_pos[0]][new_pos[1]], False):
+        if self.fmt[new_pos[0]][new_pos[1]] in walkables:
             self.pos = new_pos
 
         return self.render(viewsize[1], viewsize[0])
