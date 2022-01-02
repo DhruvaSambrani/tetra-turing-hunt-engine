@@ -7,7 +7,7 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
 # Objectives
 
 - [ ] Start a terminal screen using Tk
-- Make a map displaying logic
+- [ ] Make a map displaying logic
     - [x] Read map from file and display it on terminal screen
     - [ ] Read map metadata
     - [x] Capture and react to the user movement input
@@ -15,11 +15,11 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
     - [ ] Make map to map transitions
     - [ ] Emit events for code to listen to
 
-- Make item interaction logic
-    - [] Read items from file and place in map
-    - [] Interact with items on map
-    - [] Display item interaction screen
-    - [] Make interaction mechanics
+- [ ] Make item interaction logic
+    - [ ] Read items from file and place in map
+    - [ ] Interact with items on map
+    - [ ] Display item interaction screen
+    - [ ] Make interaction mechanics
 
 
 # Developing
