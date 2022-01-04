@@ -1,6 +1,6 @@
 import json
 import PySimpleGUI as sg
-
+import hashlib
 
 class Item():
     def __init__(self, itempath):
@@ -11,10 +11,26 @@ class Item():
         self.collectable = jsonobj["collectable"]
 
     def render(self):
-        return [
-            [sg.Text(i.name, justification='center', font='Serif 13')],
-            [sg.Text(i.prompt)]
-        ]
+        win = sg.Window("Popup", layout=[
+            [sg.Text(self.name, justification='center', font='Serif 13', expand_x=True)],
+            [sg.Text(self.prompt)],
+            [sg.Input(key="in")],
+            [sg.Button("Submit", expand_x=True), sg.Button("Close", expand_x=True)]
+        ], modal=True)
+        while True:
+            event,v = win.read()
+            if event=="Submit":
+                if hashlib.md5(win["in"].get().encode()).hexdigest() == self.answerhash:
+                    w = sg.Popup("Correct Answer")
+                    break
+                else:
+                    sg.Popup("Incorrect!")
+            else:
+                break
+        win.close()
+
+    def __eq__(self, t):
+        return self.name == t
 
 class Pocket():
     def __init__(self, itemlist=None):

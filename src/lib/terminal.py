@@ -14,6 +14,7 @@ class Game:
         self.items = [Item(os.path.join(itemsfolder, i)) for i in os.listdir(itemsfolder) if os.path.splitext(i)[1] == '.item']
         self.pocket = Pocket(self.items)
         self.viewsize = (61, 29)
+        self.player = "🯆"
 
         global active_map 
         active_map = Map(os.path.join(mapfolder, "home.map"))
@@ -24,10 +25,10 @@ class Game:
         global active_map
 
         layout = [
-            [sg.Text(self.title, expand_x=True, justification="center", font="fira\ code 15")],
+            [sg.Text(self.title, expand_x=True, justification="center", font="FiraCode\ Nerd\ Fonts 15")],
             [
                 sg.Frame(title="Pocket", layout=self.pocket.render(), expand_y=True, size=(200, 200), element_justification="center"),
-                sg.Text(active_map.render(self.viewsize[1], self.viewsize[0]), background_color="#282828", font=("FiraCode Nerd Font", 11), size=self.viewsize, justification="center", relief="groove", border_width=8, key="terminal"),
+                sg.Text(active_map.render(self.viewsize[1], self.viewsize[0], self.player), background_color="#282828", font=("FiraCode Nerd Font", 11), size=self.viewsize, justification="center", relief="groove", border_width=8, key="terminal"),
             ]
         ]
 
@@ -54,14 +55,17 @@ class Game:
 
             if event == sg.WIN_CLOSED or event == 'Exit':
                 break
-            if event in ["up", "down", "left", "right"]:
-                signal = active_map.move(event, self.viewsize, self.walkables)
-                
+            elif event in ["up", "down", "left", "right"]:
+                signal = active_map.move(event, self.viewsize, self.walkables, self.player)
                 if isinstance(signal, Map): #map transition
                     active_map = signal
-                    window["terminal"].update(active_map.render(self.viewsize[1], self.viewsize[0]))
+                    window["terminal"].update(active_map.render(self.viewsize[1], self.viewsize[0], self.player))
                 else:
-                    window["terminal"].update(signal) 
+                    window["terminal"].update(signal)
+            elif "-ITEM-" in event:
+                self.items[self.items.index(event[6:])].render()
+            else:
+                print(event)
         window.close()
 
 Game("Turing Hunt 2022").run()

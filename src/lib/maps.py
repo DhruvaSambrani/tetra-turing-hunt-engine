@@ -18,50 +18,33 @@ class Map:
         self.exit_coords = [[int(x) for x in elt.split(",")] for elt in jsonobj["exits"].keys()] #list of exit points
 
 
-    def render(self, vr, vc):
-
+    def render(self, vr, vc, player):
         sr, sc = self.pos 
-
-        #center the block around player
         sr, sc = (sr - vr//2), (sc - vc//2)
-            
-        #cutout of map that falls within the block
         mini = self.fmt[
                         max(0, sr) : min(self.r, vr + sr),
                         max(0, sc) : min(self.c, vc + sc)
                         ] 
-
         mini_r, mini_c = mini.shape
-
-        #find position of the cutout relative to the block
         r_rel, c_rel = -min(0, sr), -min(0, sc)
-        
-        #place cutout inside the block \u2592
         block = np.stack([[" " for c in range(vc)] for r in range(vr)])
-
         block[r_rel : (r_rel + mini_r), c_rel : (c_rel + mini_c)] = mini
-
-        block[vr//2, vc//2] = "🯇" #display player
-
+        block[vr//2, vc//2] = player
         return "\n".join(["".join(elt) for elt in block.tolist()])
         
-    def move(self, code, viewsize, walkables):
-        
+    def move(self, code, viewsize, walkables, player):
         dir = {
             "up": [-1, 0],
             "down": [1, 0],
             "left": [0, -1],
             "right": [0, 1]
             }
-
         new_pos = self.pos + np.array(dir[code])
 
         if self.fmt[new_pos[0]][new_pos[1]] in walkables:
             self.pos = new_pos
-
-            # check for map transitions
             if any(elt == list(new_pos) for elt in self.exit_coords):
                 new_pos_key = ",".join(np.char.mod('%i', new_pos))
                 return Map(os.path.join("../assets/maps", self.exits[new_pos_key][0] + ".map"), self.exits[new_pos_key][1])
 
-        return self.render(viewsize[1], viewsize[0])
+        return self.render(viewsize[1], viewsize[0], player)
