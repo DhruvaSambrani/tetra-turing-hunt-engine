@@ -10,7 +10,6 @@ class Map:
         with open(filepath, encoding = 'utf-8') as fh:
             jsonobj = json.load(fh, strict=False)
 
-        self.name = jsonobj["name"]
         self.fmt = np.stack([list(elt) for elt in jsonobj["raw"].splitlines()]) #formatted map as np grid
         self.r, self.c = self.fmt.shape #map size
         self.pos = np.array(jsonobj["init_pos"]) if (pos is None) else pos #player pos
@@ -42,7 +41,7 @@ class Map:
 
         block[r_rel : (r_rel + mini_r), c_rel : (c_rel + mini_c)] = mini
 
-        block[vr//2, vc//2] = "O" #display player
+        block[vr//2, vc//2] = "🯇" #display player
 
         return "\n".join(["".join(elt) for elt in block.tolist()])
         

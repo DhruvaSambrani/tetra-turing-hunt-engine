@@ -24,10 +24,10 @@ class Game:
         global active_map
 
         layout = [
-            [sg.Text(self.title, expand_x=True, justification="center", font="Source\ Code\ Pro 15")],
+            [sg.Text(self.title, expand_x=True, justification="center", font="fira\ code 15")],
             [
                 sg.Frame(title="Pocket", layout=self.pocket.render(), expand_y=True, size=(200, 200), element_justification="center"),
-                sg.Text(active_map.render(self.viewsize[1], self.viewsize[0]), background_color="#282828", font=("Source Code Pro", 12), size=self.viewsize, justification="center", relief="groove", border_width=8, key="terminal"),
+                sg.Text(active_map.render(self.viewsize[1], self.viewsize[0]), background_color="#282828", font=("FiraCode Nerd Font", 11), size=self.viewsize, justification="center", relief="groove", border_width=8, key="terminal"),
             ]
         ]
 
