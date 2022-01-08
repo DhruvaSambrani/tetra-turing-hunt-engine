@@ -6,25 +6,45 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
 
 # Objectives
 
+## Primary
+
 - [x] Start a terminal screen using PSGui
-- [ ] Handle `Surface`s
-    - [ ] Read surfaces.json and load all `Surface`s
+- [x] Handle `Surface`s
+    - [x] Read surfaces.json and load all `Surface`s
 
 - [ ] Make a map displaying logic
     - [x] Read map from file and display it on terminal screen
-    - [ ] Read map metadata
+    - [x] Read map metadata
     - [x] Capture and react to the user movement input
-    - [ ] Make sure map can be traversed only on `walkable` `Surface`s
+    - [x] Make sure map can be traversed only on `walkable` `Surface`s
     - [ ] Make map to map transitions
     - [ ] Emit events for code to listen to
 
-- [ ] Make item interaction logic
-    - [ ] Read items from file and place in map
-    - [ ] Interact with items on map
-    - [ ] Display item interaction screen
-    - [ ] Make interaction mechanics
+- [ ] Implement Pocket
+    - [x] Actual storage
+    - [ ] Display Pocket
 
+- [ ] Implement Logging and LoggerView
+
+- [ ] Make item interaction logic
+    - [x] Read items from file and place in map
+    - [x] Interact with items on map
+    - [x] Display item interaction screen
+    - [ ] Make interaction mechanics
+    - [ ] Allow arbitrary code execution and document
+    - [ ] Arbitrary output types
+    - [ ] Arbitrary input types
+
+## Secondary 
+
+- [ ] Make game builders
+    - [ ] Make bitmap -> map
+    - [ ] Make item builder
+
+- [ ] Implement Save game 
 
 # Developing
+
 1. Install PySimpleGUI and numpy
-2. Run `python3 terminal.py`
+2. `cd src`
+3. Run `python3 libs/terminal.py`

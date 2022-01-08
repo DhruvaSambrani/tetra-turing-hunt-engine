@@ -2,70 +2,87 @@ import PySimpleGUI as sg
 import os
 from maps import Map, active_map
 from items import Item, Pocket
-from surfaces import Surface
+from surfaces import Surface, Decoration
+from settings import Settings
 
 class Game:
-    def __init__(self, title, mapfolder="../assets/maps/", surffolder = "../assets/surfaces/", itemsfolder="../assets/items/", theme="Dark"):
+    def __init__(self, title, settingsfile, theme="Dark"):
         self.title = title
-        self.surfaces = [Surface(os.path.join(surffolder, i)) for i in os.listdir(surffolder) if os.path.splitext(i)[1] == '.surface']
-        self.walkables = [elt.character for elt in self.surfaces if elt.walkable]
+        self.settings = Settings(settingsfile)
+        self.surfaces = [
+            Surface(self.settings.surfacefile(i))
+            for i in os.listdir(self.settings.surfacespath)
+        ]
+        self.maps = [Map(self.settings.mapfile(i), self.settings) for i in os.listdir(self.settings.mapspath)]
+        self.items = [
+            Item(self.settings.itemfile(i))
+            for i in os.listdir(self.settings.itemspath)
+        ]
+        self.pocket = Pocket([])
 
-        # self.maps = [Map(os.path.join(mapfolder, i)) for i in os.listdir(mapfolder) if os.path.splitext(i)[1] == '.map']
-        self.items = [Item(os.path.join(itemsfolder, i)) for i in os.listdir(itemsfolder) if os.path.splitext(i)[1] == '.item']
-        self.pocket = Pocket(self.items)
-        self.viewsize = (61, 29)
-        self.player = "🯆"
-
-        global active_map 
-        active_map = Map(os.path.join(mapfolder, "home.map"))
+        self.active_map = self.map("Home")
 
         sg.theme("dark")
 
-    def run(self):
-        global active_map
+    def map(self, t, newpos=None):
+        new_map = self.maps[self.maps.index(t)]
+        if newpos != None:
+            new_map.pos = newpos
+        return new_map
 
-        layout = [
+    def surface(self, t):
+        if t in self.surfaces:
+            return self.surfaces[self.surfaces.index(t)]
+        return Decoration
+
+    def item(self, t):
+        return self.items[self.items.index(t)]
+
+    def update_pocket(self):
+        print(len(self.pocket.itemlist))
+        self.window["pocket_frame"].layout(self.pocket.render())
+        self.window["pocket_frame"].update(f"Pocket has {len(self.pocket.itemlist)} items")
+
+    def run(self):
+
+        self.layout = [
             [sg.Text(self.title, expand_x=True, justification="center", font="FiraCode\ Nerd\ Fonts 15")],
             [
-                sg.Frame(title="Pocket", layout=self.pocket.render(), expand_y=True, size=(200, 200), element_justification="center"),
-                sg.Text(active_map.render(self.viewsize[1], self.viewsize[0], self.player), background_color="#282828", font=("FiraCode Nerd Font", 11), size=self.viewsize, justification="center", relief="groove", border_width=8, key="terminal"),
+                sg.Frame(key="pocket_frame", title="Pocket", layout=self.pocket.render(), expand_y=True, size=(200, 200), element_justification="center"),
+                sg.Text(self.active_map.render(self.settings), background_color="#282828", font=("FiraCode Nerd Font", 11), size=self.settings.viewport, justification="center", relief="groove", border_width=8, key="terminal"),
             ]
         ]
 
-        window = sg.Window(
-                'Turing Hunt', 
-                layout, 
-                return_keyboard_events=True,
+        self.window = sg.Window(
+                'Turing Hunt',
+                self.layout,
                 use_default_focus=False,
                 finalize = True
         )
         # player controls
-        window.bind("<KeyPress-w>", "up")
-        window.bind("<KeyPress-a>", "left")
-        window.bind("<KeyPress-s>", "down")
-        window.bind("<KeyPress-d>", "right")
-        
-        window.bind("<KeyPress-W>", "up")
-        window.bind("<KeyPress-A>", "left")
-        window.bind("<KeyPress-S>", "down")
-        window.bind("<KeyPress-D>", "right")
+        self.window.bind("<KeyPress-w>", "up")
+        self.window.bind("<KeyPress-a>", "left")
+        self.window.bind("<KeyPress-s>", "down")
+        self.window.bind("<KeyPress-d>", "right")
+
+        self.window.bind("<KeyPress-W>", "up")
+        self.window.bind("<KeyPress-A>", "left")
+        self.window.bind("<KeyPress-S>", "down")
+        self.window.bind("<KeyPress-D>", "right")
 
         while True:
-            event, values = window.read()
+            event, values = self.window.read()
 
             if event == sg.WIN_CLOSED or event == 'Exit':
                 break
             elif event in ["up", "down", "left", "right"]:
-                signal = active_map.move(event, self.viewsize, self.walkables, self.player)
-                if isinstance(signal, Map): #map transition
-                    active_map = signal
-                    window["terminal"].update(active_map.render(self.viewsize[1], self.viewsize[0], self.player))
-                else:
-                    window["terminal"].update(signal)
+                self.active_map = self.active_map.move(event, self)
+                self.window["terminal"].update(self.active_map.render(self.settings))
             elif "-ITEM-" in event:
-                self.items[self.items.index(event[6:])].render()
+                self.items(event[6:]).render(game)
             else:
-                print(event)
-        window.close()
+                pass
+            self.update_pocket()
+        self.window.close()
 
-Game("Turing Hunt 2022").run()
+Game("Turing Hunt 2022", "assets/settings.json").run()
