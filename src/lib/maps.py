@@ -88,6 +88,7 @@ class Map:
                     if game.energy.val > 15:
                         new_pos_key = ",".join(np.char.mod('%i', new_pos))
                         transitionAnim(game, 0.0001)
+                        
                         game.clock.update(game.settings.transition_time)
                         game.energy.update(game.settings.transition_energy_cost)
 

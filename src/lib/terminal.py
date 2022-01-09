@@ -48,14 +48,46 @@ class Game:
         self.window["pocket_frame"].layout(self.pocket.render())
         self.window["pocket_frame"].update(f"Pocket has {len(self.pocket.itemlist)} items")
 
+    def update_gadgets(self, prev_time):
+            #in game clock update
+            if (time() - prev_time > self.settings.clock_tick): 
+                prev_time = time()
+                self.window["time"].update(self.clock.update())
+
+            #update GPS
+            self.window["loc"].update(self.GPS.update(self.active_map.name, self.active_map.pos))
+            self.window["energy"].UpdateBar(self.energy.val)
+
+            return prev_time
+
     def run(self):
 
         self.layout = [
             [sg.Text(self.title, expand_x=True, justification="center", font="FiraCode\ Nerd\ Fonts 15")],
             [
-                sg.Frame(key="pocket_frame", title="Pocket", layout=self.pocket.render(), expand_y=True, size=(200, 200), element_justification="center"),
-                sg.Text(self.active_map.render(self.settings), background_color="#282828", font=("Source Code Pro", 11), size=self.settings.viewport, justification="center", relief="groove", border_width=8, key="terminal"),
-                sg.Frame(key="gadget_frame", title="Gadgets", layout=[self.energy.render(), self.clock.render(), self.GPS.render()], expand_y=True, size=(200, 200), element_justification="center"),
+                sg.Frame(
+                    key="pocket_frame", 
+                    title="Pocket", 
+                    layout=self.pocket.render(), 
+                    expand_y=True, 
+                    size=(200, 200), 
+                    element_justification="center"),
+                sg.Text(
+                    key="terminal",
+                    text=self.active_map.render(self.settings), 
+                    background_color="#282828", 
+                    font=("Source Code Pro", 11), 
+                    size=self.settings.viewport,  
+                    relief="groove", 
+                    border_width=8,
+                    justification="center"),
+                sg.Frame(
+                    key="gadget_frame", 
+                    title="Gadgets", 
+                    layout=[self.energy.render(), self.clock.render(), self.GPS.render()], 
+                    expand_y=True, 
+                    size=(200, 200), 
+                    element_justification="center"),
             ],
             [sg.ProgressBar(100, orientation='h', size=(30, 20), bar_color = ("#939393", "#4D4D4D"), key='progressbar', pad = (305, 5))]
         ]
@@ -77,7 +109,7 @@ class Game:
         self.window.bind("<KeyPress-S>", "down")
         self.window.bind("<KeyPress-D>", "right")
 
-        last_time = time()
+        prev_time = time()
 
         while True:
             event, values = self.window.read(timeout = 1000)
@@ -95,15 +127,7 @@ class Game:
                 pass
             
             self.update_pocket()
-
-            #in game clock update
-            if (time() - last_time > self.settings.clock_tick): 
-                last_time = time()
-                self.window["time"].update(self.clock.update())
-
-            #update GPS
-            self.window["loc"].update(self.GPS.update(self.active_map.name, self.active_map.pos))
-            self.window["energy"].UpdateBar(self.energy.val)
+            prev_time = self.update_gadgets(prev_time)
 
         self.window.close()
 
