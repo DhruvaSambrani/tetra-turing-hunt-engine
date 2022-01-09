@@ -1,10 +1,33 @@
 import json
 import os
 import numpy as np
-
+import PySimpleGUI as sg
 from items import Item
+from time import sleep
 
-active_map = None
+def load(game, secs):
+    counter = 0
+
+    while(True):
+        game.window["progressbar"].UpdateBar(counter + 4)
+        sleep(secs/100)
+        counter += 2
+
+        if(counter == 102):
+            break
+
+def transitionAnim(game, secs):
+    
+        load(game, secs)
+        game.window["progressbar"].update(bar_color = ("#4D4D4D", "#939393"))
+        load(game, secs)
+
+        game.window["progressbar"].UpdateBar(0)
+        game.window["progressbar"].update(bar_color = ("#939393", "#4D4D4D"))
+
+def clamp(p, r, c):
+    return [p[0] % r, p[1] % c]
+
 
 class Map:
     def __init__(self, filepath, settings, pos = None):
@@ -53,13 +76,18 @@ class Map:
             "left": [0, -1],
             "right": [0, 1]
             }
-        new_pos = self.pos + np.array(dir[code])
-
+        new_pos = clamp(self.pos + np.array(dir[code]), self.r, self.c)
+        
         if self.iswalkable(new_pos, game):
             self.pos = new_pos
             self.activate_item_here(game)
+
             if any(elt == list(new_pos) for elt in self.exit_coords):
                 new_pos_key = ",".join(np.char.mod('%i', new_pos))
+                
+                transitionAnim(game, 0.0001)
+                game.clock.update(10)
+                
                 return game.map(self.exits[new_pos_key][0], self.exits[new_pos_key][1])
 
         return self
