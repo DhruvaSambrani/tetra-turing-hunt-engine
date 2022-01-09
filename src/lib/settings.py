@@ -9,6 +9,16 @@ class Settings():
         self.itemspath = jsonobj["itemspath"]
         self.mapspath = jsonobj["mapspath"]
         self.surfacespath = jsonobj["surfacespath"]
+        
+        self.transition_time = jsonobj["transition_time"]
+        self.start_energy = jsonobj["start_energy"]
+        self.idle_energy_gain = jsonobj["idle_energy_gain"]
+        self.walking_energy_cost = jsonobj["walking_energy_cost"]
+        self.transition_energy_cost = jsonobj["transition_energy_cost"]
+        self.max_energy = jsonobj["max_energy"]
+
+        self.clock_tick = jsonobj["clock_tick"]
+
     def itemfile(self, it):
         return self.itemspath + "/" + it
     def mapfile(self, it):

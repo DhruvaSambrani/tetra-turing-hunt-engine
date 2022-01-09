@@ -26,8 +26,7 @@ def transitionAnim(game, secs):
         game.window["progressbar"].update(bar_color = ("#939393", "#4D4D4D"))
 
 def clamp(p, r, c):
-    return [p[0] % r, p[1] % c]
-
+    return [min(max(0, p[0]), r-1), min(max(0, p[1]), c-1)]
 
 class Map:
     def __init__(self, filepath, settings, pos = None):
@@ -79,15 +78,23 @@ class Map:
         new_pos = clamp(self.pos + np.array(dir[code]), self.r, self.c)
         
         if self.iswalkable(new_pos, game):
-            self.pos = new_pos
-            self.activate_item_here(game)
+            if game.energy.val > 1:
+                self.pos = new_pos
+                self.activate_item_here(game)
+                game.energy.update(game.settings.walking_energy_cost)
 
-            if any(elt == list(new_pos) for elt in self.exit_coords):
-                new_pos_key = ",".join(np.char.mod('%i', new_pos))
-                
-                transitionAnim(game, 0.0001)
-                game.clock.update(10)
-                
-                return game.map(self.exits[new_pos_key][0], self.exits[new_pos_key][1])
+                if any(elt == list(new_pos) for elt in self.exit_coords):
+
+                    if game.energy.val > 15:
+                        new_pos_key = ",".join(np.char.mod('%i', new_pos))
+                        transitionAnim(game, 0.0001)
+                        game.clock.update(game.settings.transition_time)
+                        game.energy.update(game.settings.transition_energy_cost)
+
+                        return game.map(self.exits[new_pos_key][0], self.exits[new_pos_key][1])
+                    else:
+                        sg.popup_no_buttons('I\'m way too tired to walk that far.\n I need a coffee... or five.', auto_close = True, auto_close_duration = 3, no_titlebar = True, modal = True)
+            else:
+                sg.popup_no_buttons('My legs are dead.', auto_close = True, auto_close_duration = 3, no_titlebar = True, modal = True)
 
         return self

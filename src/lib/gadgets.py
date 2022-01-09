@@ -26,13 +26,14 @@ class GPS():
 
         return f"Location: {self.loc}\n\n Position: {self.pos}"
 
-class Energy():
-    def __init__(self, start_energy=100):
-        self.time = start_energy
+class EnergyMeter():
+    def __init__(self, start_energy = 100, max_energy = 100):
+        self.val = start_energy
+        self.max_val = max_energy
 
     def render(self):
-        return [sg.Frame(key="clock", title="Clock", layout= [[sg.Text(self.time.strftime("%H:%M, %A"), key = "time")]], size=(20, 50), element_justification="center", expand_x=True)]
+        return [sg.Frame(key="energybar", title="Energy", layout= [[sg.ProgressBar(self.max_val, orientation='h', size=(30, 10), key='energy', expand_x = True, pad = 10)]])]
     
-    def update(self, val = 1):
-        self.time += dt.timedelta(minutes = val)
-        return self.time.strftime("%H:%M, %A")
+    def update(self, inc = 1):
+        self.val = min(max(0, (self.val + inc)), self.max_val)
+        return self.val
