@@ -21,7 +21,7 @@ class Game:
             for i in os.listdir(self.settings.itemspath)
         ]
 
-        self.active_map = self.map("Large Home")
+        self.active_map = self.map("Home")
 
         self.pocket = Pocket([])
         self.clock = Clock()

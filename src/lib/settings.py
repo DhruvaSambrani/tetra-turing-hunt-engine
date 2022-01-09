@@ -3,7 +3,7 @@ import json
 
 class Settings():
     def __init__(self, settingsjson):
-        jsonobj = json.loads(open(settingsjson).read())
+        jsonobj = json.loads(open(settingsjson, encoding="utf-8").read())
         self.player = jsonobj["player"]
         self.viewport = jsonobj["viewport"]
         self.itemspath = jsonobj["itemspath"]
@@ -21,9 +21,12 @@ class Settings():
 
     def itemfile(self, it):
         return self.itemspath + "/" + it
+
     def mapfile(self, it):
         return self.mapspath + "/" + it
+
     def surfacefile(self, it):
         return self.surfacespath + "/" + it
+
 
 

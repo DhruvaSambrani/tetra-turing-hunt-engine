@@ -17,11 +17,9 @@ def load(game, secs):
             break
 
 def transitionAnim(game, secs):
-    
         load(game, secs)
         game.window["progressbar"].update(bar_color = ("#4D4D4D", "#939393"))
         load(game, secs)
-
         game.window["progressbar"].UpdateBar(0)
         game.window["progressbar"].update(bar_color = ("#939393", "#4D4D4D"))
 
@@ -66,6 +64,8 @@ class Map:
                 self.items.pop(tuple(self.pos))
 
     def iswalkable(self, new_pos, game):
+        s = game.surface(self.fmt[new_pos[0]][new_pos[1]])
+        print(s.name)
         return game.surface(self.fmt[new_pos[0]][new_pos[1]]).walkable
 
     def move(self, code, game):
@@ -84,7 +84,6 @@ class Map:
                 game.energy.update(game.settings.walking_energy_cost)
 
                 if any(elt == list(new_pos) for elt in self.exit_coords):
-
                     if game.energy.val > 15:
                         new_pos_key = ",".join(np.char.mod('%i', new_pos))
                         transitionAnim(game, 0.0001)
