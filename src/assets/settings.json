@@ -3,5 +3,12 @@
     "viewport": [61, 29],
     "itemspath": "assets/items",
     "mapspath": "assets/maps",
-    "surfacespath": "assets/surfaces"
+    "surfacespath": "assets/surfaces",
+    "transition_time": 10, 
+    "start_energy": 75,
+    "max_energy": 100,
+    "idle_energy_gain": 5,
+    "walking_energy_cost": -0.075,
+    "transition_energy_cost": -5,
+    "clock_tick": 1
 }

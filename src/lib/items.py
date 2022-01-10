@@ -4,7 +4,7 @@ import hashlib
 
 class Item():
     def __init__(self, itempath):
-        jsonobj = json.loads(open(itempath).read())
+        jsonobj = json.loads(open(itempath, encoding="utf-8").read())
         self.name = jsonobj["name"]
         self.prompt = jsonobj["promptmd"]
         self.answerhash = jsonobj["answerhash"]
