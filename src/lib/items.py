@@ -1,38 +1,69 @@
 import json
 import PySimpleGUI as sg
 import hashlib
+import helpers
 
 class Item():
     def __init__(self, itempath):
         jsonobj = json.loads(open(itempath, encoding="utf-8").read())
         self.name = jsonobj["name"]
-        self.prompt = jsonobj["promptmd"]
-        self.answerhash = jsonobj["answerhash"]
+        self.desc = jsonobj["desc"]
+        self.media_path = jsonobj.get("media_path", None)
+        self.need_input = jsonobj["need_input"]
+        self.answerhash = jsonobj.get("answerhash", None)
         self.collectable = jsonobj["collectable"]
+        self.code_file = jsonobj.get("code_file", None)
 
-    def render(self, game):
-        win = sg.Window("Popup", layout=[
+    def make_layout(self, collected):
+        layout = [
             [sg.Text(self.name, justification='center', font='Serif 13', expand_x=True)],
-            [sg.Text(self.prompt)],
-            [sg.Input(key="in")],
-            [sg.Button("Submit", expand_x=True), sg.Button("Close", expand_x=True)]
-        ], modal=True)
+            [sg.Text(self.desc, size=(50, None))],
+            [],
+            [sg.Button("Close", expand_x=True)]
+        ]
+        if not (self.media_path is None):
+            layout[3].append(sg.Button("Play Media", expand_x=True))
+        if self.need_input and not collected:
+            layout[2].append(sg.Input(key="in", size=(50, None)))
+            layout[3].append(sg.Button("Submit", expand_x=True))
+        return layout
+
+    def perform_success(self, game):
+        if self.collectable:
+            game.pocket.append(self)
+        self.on_success_code_run(game)
+
+    def on_success_code_run(self, game):
+        # HIGHLY UNSAFE
+        if not(self.code_file is None):
+            print("Should eval now")
+            exec(compile(open(self.code_file).read(), self.code_file, "exec"))
+
+
+
+    def render(self, game, collected=False):
+        win = sg.Window("Popup", layout=self.make_layout(collected), modal=True)
         successful = False
         while True:
             event,v = win.read()
-            if event=="Submit":
+            if event == "Play Media":
+                helpers.play_media(self.media_path)
+            elif self.need_input and event=="Submit":
                 if hashlib.md5(win["in"].get().encode()).hexdigest() == self.answerhash:
                     w = sg.Popup("Correct Answer")
                     successful = True
-                    if self.collectable:
-                        game.pocket.append(self)
+                    self.perform_success(game)
                     break
                 else:
                     sg.Popup("Incorrect!")
+            elif event=="Close" and not self.need_input:
+                self.perform_success(game)
+                successful = True
+                break
             else:
                 break
         win.close()
-        return successful
+        return successful and self.collectable
 
     def __eq__(self, t):
         return self.name == t
@@ -41,13 +72,41 @@ class Pocket():
     def __init__(self, itemlist=None):
         self.itemlist = itemlist if itemlist is not None else []
 
-    def render(self):
-        return [[sg.Button(i.name, key=f"-ITEM-{i.name}", enable_events=True)] for i in self.itemlist]
+    def item(self, t):
+        return self.itemlist[self.itemlist.index(t)]
+
+
+    def render(self, game):
+        if len(self.itemlist) > 0:
+            win = sg.Window(
+                title="Pocket",
+                layout = [
+                    [sg.Frame(
+                        "Pocket",
+                        layout=[[sg.Button(i.name, key=f"-ITEM-{i.name}", enable_events=True)] for i in self.itemlist],
+                        expand_x = True, expand_y = True,
+                        element_justification = "center"
+                    )],
+                    [sg.Button("Close")]
+                ],
+                size = (750, 500),
+                element_justification="right",
+                modal = True
+            )
+            while True:
+                event, values = win.read()
+                if event == sg.WIN_CLOSED or event == 'Exit' or event == "Close":
+                    break
+                else:
+                    self.item(event[6:]).render(game, True)
+            win.close()
+        else:
+            sg.popup_no_buttons("No items in Pocket. Broke, much like IISER.", auto_close = True, auto_close_duration = 4, no_titlebar = True, modal = True)
+
     
     def append(self, item):
         self.itemlist.append(item)
 
     def drop(self, item):
         self.remove(item)
-
 

@@ -17,12 +17,12 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
     - [x] Read map metadata
     - [x] Capture and react to the user movement input
     - [x] Make sure map can be traversed only on `walkable` `Surface`s
-    - [ ] Make map to map transitions
+    - [x] Make map to map transitions
     - [ ] Emit events for code to listen to
 
-- [ ] Implement Pocket
+- [x] Implement Pocket
     - [x] Actual storage
-    - [ ] Display Pocket
+    - [x] Display Pocket
 
 - [ ] Implement Logging and LoggerView
 
@@ -30,15 +30,16 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
     - [x] Read items from file and place in map
     - [x] Interact with items on map
     - [x] Display item interaction screen
-    - [ ] Make interaction mechanics
-    - [ ] Allow arbitrary code execution and document
-    - [ ] Arbitrary output types
+    - [x] Make interaction mechanics
+    - [x] Allow arbitrary code execution 
+    - [ ] document
+    - [x] Arbitrary output types
     - [ ] Arbitrary input types
 
 ## Secondary 
 
 - [ ] Make game builders
-    - [ ] Make bitmap -> map
+    - [x] Make bitmap -> map
     - [ ] Make item builder
 
 - [ ] Implement Save game 

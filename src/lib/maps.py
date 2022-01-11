@@ -57,15 +57,15 @@ class Map:
         return "\n".join(["".join(elt) for elt in block.tolist()])
     
     def activate_item_here(self, game):
-        i =  self.items.get(tuple(self.pos), None)
+        nowpos = [self.pos[0], self.pos[1]]
+        i =  self.items.get(tuple(nowpos), None)
         if not (i is None):
-            success = game.item(i).render(game)
-            if success:
-                self.items.pop(tuple(self.pos))
+            to_remove = game.item(i).render(game)
+            if to_remove:
+                self.items.pop(tuple(nowpos))
 
     def iswalkable(self, new_pos, game):
         s = game.surface(self.fmt[new_pos[0]][new_pos[1]])
-        print(s.name)
         return game.surface(self.fmt[new_pos[0]][new_pos[1]]).walkable
 
     def move(self, code, game):
@@ -78,23 +78,12 @@ class Map:
         new_pos = clamp(self.pos + np.array(dir[code]), self.r, self.c)
         
         if self.iswalkable(new_pos, game):
-            if game.energy.val > 1:
-                self.pos = new_pos
-                self.activate_item_here(game)
-                game.energy.update(game.settings.walking_energy_cost)
+            self.pos = new_pos
+            self.activate_item_here(game)
 
-                if any(elt == list(new_pos) for elt in self.exit_coords):
-                    if game.energy.val > 15:
-                        new_pos_key = ",".join(np.char.mod('%i', new_pos))
-                        transitionAnim(game, 0.0001)
-                        
-                        game.clock.update(game.settings.transition_time)
-                        game.energy.update(game.settings.transition_energy_cost)
-
-                        return game.map(self.exits[new_pos_key][0], self.exits[new_pos_key][1])
-                    else:
-                        sg.popup_no_buttons('I\'m way too tired to walk that far.\n I need a coffee... or five.', auto_close = True, auto_close_duration = 3, no_titlebar = True, modal = True)
-            else:
-                sg.popup_no_buttons('My legs are dead.', auto_close = True, auto_close_duration = 3, no_titlebar = True, modal = True)
+            if any(elt == list(new_pos) for elt in self.exit_coords):
+                new_pos_key = ",".join(np.char.mod('%i', new_pos))
+                transitionAnim(game, 0.0001)
+                return game.map(self.exits[new_pos_key][0], self.exits[new_pos_key][1])
 
         return self

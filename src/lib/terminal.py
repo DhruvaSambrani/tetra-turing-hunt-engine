@@ -8,7 +8,7 @@ from settings import Settings
 from gadgets import Clock, GPS, EnergyMeter
 
 class Game:
-    def __init__(self, title, settingsfile, theme="Dark"):
+    def __init__(self, title, settingsfile, gadget_classes, theme="Dark"):
         self.title = title
         self.settings = Settings(settingsfile)
         self.surfaces = [
@@ -18,15 +18,12 @@ class Game:
         self.maps = [Map(self.settings.mapfile(i), self.settings) for i in os.listdir(self.settings.mapspath)]
         self.items = [
             Item(self.settings.itemfile(i))
-            for i in os.listdir(self.settings.itemspath)
+            for i in os.listdir(self.settings.itemspath) if ".item" in i
         ]
 
         self.active_map = self.map("Home")
-
         self.pocket = Pocket([])
-        self.clock = Clock()
-        self.GPS = GPS(self.active_map.name, self.active_map.pos)
-        self.energy = EnergyMeter(self.settings.start_energy, self.settings.max_energy)
+        self.gadgets = [G(self) for G in gadget_classes]
 
         sg.theme("dark")
 
@@ -44,34 +41,19 @@ class Game:
     def item(self, t):
         return self.items[self.items.index(t)]
 
-    def update_pocket(self):
-        self.window["pocket_frame"].layout(self.pocket.render())
-        self.window["pocket_frame"].update(f"Pocket has {len(self.pocket.itemlist)} items")
-
-    def update_gadgets(self, prev_time):
-            #in game clock update
-            if (time() - prev_time > self.settings.clock_tick): 
-                prev_time = time()
-                self.window["time"].update(self.clock.update())
-
-            #update GPS
-            self.window["loc"].update(self.GPS.update(self.active_map.name, self.active_map.pos))
-            self.window["energy"].UpdateBar(self.energy.val)
-
-            return prev_time
+    def update_gadgets(self):
+        [g.update(self) for g in self.gadgets]
 
     def run(self):
 
         self.layout = [
             [sg.Text(self.title, expand_x=True, justification="center", font="FiraCode\ Nerd\ Fonts 15")],
             [
-                sg.Frame(
-                    key="pocket_frame", 
-                    title="Pocket", 
-                    layout=self.pocket.render(), 
+                sg.Button(
+                    "Pocket",
+                    key="OPEN-POCKET", 
                     expand_y=True, 
-                    size=(200, 200), 
-                    element_justification="center"),
+                ),
                 sg.Text(
                     key="terminal",
                     text=self.active_map.render(self.settings), 
@@ -84,7 +66,7 @@ class Game:
                 sg.Frame(
                     key="gadget_frame", 
                     title="Gadgets", 
-                    layout=[self.energy.render(), self.clock.render(), self.GPS.render()], 
+                    layout=[g.render() for g in self.gadgets], 
                     expand_y=True, 
                     size=(200, 200), 
                     element_justification="center"),
@@ -109,8 +91,6 @@ class Game:
         self.window.bind("<KeyPress-S>", "down")
         self.window.bind("<KeyPress-D>", "right")
 
-        prev_time = time()
-
         while True:
             event, values = self.window.read(timeout = 1000)
 
@@ -119,16 +99,13 @@ class Game:
             elif event in ["up", "down", "left", "right"]:
                 self.active_map = self.active_map.move(event, self)
                 self.window["terminal"].update(self.active_map.render(self.settings))
-               
-            elif "-ITEM-" in event:
-                self.items(event[6:]).render(game)
+            elif event == "OPEN-POCKET":
+                self.pocket.render(self)
             else:
-                self.energy.update(self.settings.idle_energy_gain) #energy replenished
                 pass
             
-            self.update_pocket()
-            prev_time = self.update_gadgets(prev_time)
+            self.update_gadgets()
 
         self.window.close()
 
-Game("Turing Hunt 2022", "assets/settings.json").run()
+Game("Turing Hunt 2022", "assets/settings.json", [Clock, GPS, EnergyMeter]).run()

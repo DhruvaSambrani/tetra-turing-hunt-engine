@@ -17,7 +17,6 @@ class Settings():
         self.transition_energy_cost = jsonobj["transition_energy_cost"]
         self.max_energy = jsonobj["max_energy"]
 
-        self.clock_tick = jsonobj["clock_tick"]
 
     def itemfile(self, it):
         return self.itemspath + "/" + it

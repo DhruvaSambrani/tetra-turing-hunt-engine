@@ -1,39 +1,85 @@
 import PySimpleGUI as sg
-import datetime as dt
+import random
+import time 
 
-class Clock():
-    def __init__(self, start_time = dt.datetime(2022, 10, 7)):
-        self.time = start_time
-
-    def render(self):
-        return [sg.Frame(key="clock", title="Clock", layout= [[sg.Text(self.time.strftime("%H:%M, %A"), key = "time")]], size=(20, 50), element_justification="center", expand_x=True)]
-    
-    def update(self, val = 1):
-        self.time += dt.timedelta(minutes = val)
-        return self.time.strftime("%H:%M, %A")
-
-class GPS():
-    def __init__(self, start_loc, start_pos):
-        self.loc = start_loc
-        self.pos = start_pos
+class Gadget():
+    def __init__(self, name):
+        self.name = name
 
     def render(self):
-        return [sg.Frame(key="gps", title="GPS", layout= [[sg.Text(f"Location: {self.loc}\n\n Position: {self.pos}", key = "loc")]], size=(20, 85), element_justification="center", expand_x=True)]
+        return [
+            sg.Frame(
+                key=self.name.lower()+"_frame",
+                title=self.name,
+                layout=[[self.render_content()]],
+                element_justification="center",
+                expand_x=True
+        )]
     
-    def update(self, loc, pos):
-        self.loc = loc
-        self.pos = pos
+    def render_content(self):
+        return sg.Text(
+            str(self),
+            key = self.name.lower(),
+        )
 
-        return f"Location: {self.loc}\n\n Position: {self.pos}"
 
-class EnergyMeter():
-    def __init__(self, start_energy = 100, max_energy = 100):
-        self.val = start_energy
-        self.max_val = max_energy
+    def __str__(self):
+        return f"Unimplemented Gadget - {self.name}"
 
-    def render(self):
-        return [sg.Frame(key="energybar", title="Energy", layout= [[sg.ProgressBar(self.max_val, orientation='h', size=(30, 10), key='energy', expand_x = True, pad = 10)]])]
+    def update(self, game):
+        game.window[self.name.lower()].update(self.__str__())
+
+
+class Clock(Gadget):
+    def __init__(self, game):
+        super().__init__("Clock")
+        self.init_time = time.time()
+
+    def __str__(self):
+        return time.strftime("%H:%M:%S", time.gmtime((time.time()-self.init_time)))
+
+
+class GPS(Gadget):
+    def __init__(self, game):
+        super().__init__("GPS")
+        self.loc = game.active_map.name
+        self.pos = game.active_map.pos
+
+    def __str__(self):
+        return f"Location: {self.loc}\n\nPosition: {self.pos}"
     
-    def update(self, inc = 1):
-        self.val = min(max(0, (self.val + inc)), self.max_val)
-        return self.val
+    def update(self, game):
+        self.loc = game.active_map.name
+        self.pos = game.active_map.pos
+        super().update(game)
+
+class EnergyMeter(Gadget):
+    def __init__(self, game):
+        super().__init__("Energy Meter")
+        self.val = self.max_val = game.settings.max_energy
+    
+    def ded_saying(self):
+        return random.choice([
+            'I\'m way too tired to walk that far.\n I need a coffee... or five.',
+            "My legs are dead.",
+            "Even Aulak's classes are easier than this Treasure Hunt.",
+            "Holy F***. I'd take offline exams instead of this any day!",
+            "I'm ded.",
+            "And here I thought Phi@I's treasure hunts were the most exhausting.",
+            "Should have just opted for online labs man.",
+            "Should have just gone to Physictionary.\nIt would have been boring, but atleast it wouldn't be so tiring...",
+            "Sir, I think you are muted. Oh wait, I'm not in class.",
+            "F... this is longer than Kuljit's class...",
+            "Even Shain's talk on functional programming is shorter than this"
+        ])
+
+    def render_content(self):
+        return sg.ProgressBar(self.val, orientation='h', size=(30, 10), key=self.name.lower(), expand_x = True, pad = 10)
+    
+    def update(self, game):
+        self.val = max(0, self.val - game.settings.walking_energy_cost)
+        if self.val <= 0:
+            sg.popup_no_buttons(self.ded_saying(), auto_close = True, auto_close_duration = 2, no_titlebar = True, modal = True)
+            self.val = self.max_val
+        game.window[self.name.lower()].UpdateBar(self.val)
+        
