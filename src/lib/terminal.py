@@ -1,6 +1,5 @@
 import PySimpleGUI as sg
 import os
-from time import time
 from maps import Map
 from items import Item, Pocket
 from surfaces import Surface, Decoration
@@ -56,7 +55,7 @@ class Game:
 
 
     def make_layout(self):
-        glayout = [[sg.Button("Pocket", key="OPEN-POCKET", expand_x=True)]]
+        glayout = [[sg.Button("Pocket", key="OPEN-POCKET", button_color = ("#ffffff", "#4D4D4D"), expand_x=True)]]
         glayout.extend(g.render() for g in self.gadgets)
         self.layout = [
             [sg.Text(self.title, expand_x=True, justification="center", font="FiraCode\ Nerd\ Fonts 15")],
@@ -109,7 +108,8 @@ class Game:
                 'Turing Hunt',
                 self.layout,
                 use_default_focus=False,
-                finalize = True
+                finalize = True,
+                grab_anywhere = False
         )
         self.bind_sg_events()
         st = True
