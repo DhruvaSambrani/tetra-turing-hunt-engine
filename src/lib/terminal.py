@@ -41,19 +41,26 @@ class Game:
     def item(self, t):
         return self.items[self.items.index(t)]
 
-    def update_gadgets(self):
-        [g.update(self) for g in self.gadgets]
+    def translate_event(self, event):
+        d = {
+            "up": "MOVE",
+            "down": "MOVE",
+            "left": "MOVE",
+            "right": "MOVE",
+        }
+        return d.get(event, "IDLE")
 
-    def run(self):
+    def update_gadgets(self, event):
+        ev = self.translate_event(event)
+        [g.update(self, ev) for g in self.gadgets]
 
+
+    def make_layout(self):
+        glayout = [[sg.Button("Pocket", key="OPEN-POCKET", expand_x=True)]]
+        glayout.extend(g.render() for g in self.gadgets)
         self.layout = [
             [sg.Text(self.title, expand_x=True, justification="center", font="FiraCode\ Nerd\ Fonts 15")],
             [
-                sg.Button(
-                    "Pocket",
-                    key="OPEN-POCKET", 
-                    expand_y=True, 
-                ),
                 sg.Text(
                     key="terminal",
                     text=self.active_map.render(self.settings), 
@@ -66,21 +73,14 @@ class Game:
                 sg.Frame(
                     key="gadget_frame", 
                     title="Gadgets", 
-                    layout=[g.render() for g in self.gadgets], 
+                    layout=glayout, 
                     expand_y=True, 
                     size=(200, 200), 
                     element_justification="center"),
             ],
             [sg.ProgressBar(100, orientation='h', size=(30, 20), bar_color = ("#939393", "#4D4D4D"), key='progressbar', pad = (305, 5))]
         ]
-
-        self.window = sg.Window(
-                'Turing Hunt',
-                self.layout,
-                use_default_focus=False,
-                finalize = True
-        )
-        # player controls
+    def bind_sg_events(self):
         self.window.bind("<KeyPress-w>", "up")
         self.window.bind("<KeyPress-a>", "left")
         self.window.bind("<KeyPress-s>", "down")
@@ -91,20 +91,32 @@ class Game:
         self.window.bind("<KeyPress-S>", "down")
         self.window.bind("<KeyPress-D>", "right")
 
-        while True:
-            event, values = self.window.read(timeout = 1000)
+    def handle_event(self, event):
+        if event == sg.WIN_CLOSED or event == 'Exit':
+            return False
+        elif event in ["up", "down", "left", "right"]:
+            self.active_map = self.active_map.move(event, self)
+            self.window["terminal"].update(self.active_map.render(self.settings))
+        elif event == "OPEN-POCKET":
+            self.pocket.render(self)
+        else:
+            pass
+        return True
 
-            if event == sg.WIN_CLOSED or event == 'Exit':
-                break
-            elif event in ["up", "down", "left", "right"]:
-                self.active_map = self.active_map.move(event, self)
-                self.window["terminal"].update(self.active_map.render(self.settings))
-            elif event == "OPEN-POCKET":
-                self.pocket.render(self)
-            else:
-                pass
-            
-            self.update_gadgets()
+    def run(self):
+        self.make_layout()
+        self.window = sg.Window(
+                'Turing Hunt',
+                self.layout,
+                use_default_focus=False,
+                finalize = True
+        )
+        self.bind_sg_events()
+        st = True
+        while st:
+            event, _ = self.window.read(timeout = 1000)
+            st = self.handle_event(event)
+            self.update_gadgets(event)
 
         self.window.close()
 

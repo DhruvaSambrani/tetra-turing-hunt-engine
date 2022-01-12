@@ -11,11 +11,8 @@ class Settings():
         self.surfacespath = jsonobj["surfacespath"]
         
         self.transition_time = jsonobj["transition_time"]
-        self.start_energy = jsonobj["start_energy"]
-        self.idle_energy_gain = jsonobj["idle_energy_gain"]
+        self.rest_energy = jsonobj["rest_energy"]
         self.walking_energy_cost = jsonobj["walking_energy_cost"]
-        self.transition_energy_cost = jsonobj["transition_energy_cost"]
-        self.max_energy = jsonobj["max_energy"]
 
 
     def itemfile(self, it):

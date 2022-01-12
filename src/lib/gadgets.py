@@ -26,7 +26,7 @@ class Gadget():
     def __str__(self):
         return f"Unimplemented Gadget - {self.name}"
 
-    def update(self, game):
+    def update(self, game, event):
         game.window[self.name.lower()].update(self.__str__())
 
 
@@ -44,19 +44,21 @@ class GPS(Gadget):
         super().__init__("GPS")
         self.loc = game.active_map.name
         self.pos = game.active_map.pos
+        self.surf = game.surface(game.active_map.fmt[self.pos[0]][self.pos[1]]).name
 
     def __str__(self):
-        return f"Location: {self.loc}\n\nPosition: {self.pos}"
+        return f"Location: {self.loc}\n\nPosition: {self.pos}\n{self.surf}"
     
-    def update(self, game):
+    def update(self, game, _):
         self.loc = game.active_map.name
         self.pos = game.active_map.pos
-        super().update(game)
+        self.surf = game.surface(game.active_map.fmt[self.pos[0]][self.pos[1]]).name
+        super().update(game, _)
 
 class EnergyMeter(Gadget):
     def __init__(self, game):
         super().__init__("Energy Meter")
-        self.val = self.max_val = game.settings.max_energy
+        self.val = self.max_val = 100
     
     def ded_saying(self):
         return random.choice([
@@ -76,10 +78,15 @@ class EnergyMeter(Gadget):
     def render_content(self):
         return sg.ProgressBar(self.val, orientation='h', size=(30, 10), key=self.name.lower(), expand_x = True, pad = 10)
     
-    def update(self, game):
-        self.val = max(0, self.val - game.settings.walking_energy_cost)
+    def update(self, game, event):
+        if event == "IDLE":
+            delta = game.settings.rest_energy
+        else:
+            delta = -game.settings.walking_energy_cost 
+
+        self.val = min(max(0, self.val + delta), 100)
         if self.val <= 0:
             sg.popup_no_buttons(self.ded_saying(), auto_close = True, auto_close_duration = 2, no_titlebar = True, modal = True)
-            self.val = self.max_val
+            self.val = self.max_val / 2
         game.window[self.name.lower()].UpdateBar(self.val)
         
