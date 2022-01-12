@@ -20,6 +20,7 @@
                 "5,63" : ["Large Home", [5, 1]]
                 },
     "items": {
-        "Teleporter2": [5, 2]
+        "Teleporter": [13, 47],
+        "Shoe": [11, 47]
     }
 }

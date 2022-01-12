@@ -65,7 +65,6 @@ class Map:
                 self.items.pop(tuple(nowpos))
 
     def iswalkable(self, new_pos, game):
-        s = game.surface(self.fmt[new_pos[0]][new_pos[1]])
         return game.surface(self.fmt[new_pos[0]][new_pos[1]]).walkable
 
     def move(self, code, game):

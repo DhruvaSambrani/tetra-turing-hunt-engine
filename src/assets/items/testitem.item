@@ -4,6 +4,6 @@
     "desc": "This is a teleporting machine! This will take you to (10, 10). Type in 'test' to activate!",
     "need_input": true,
     "code_file": "assets/items/code/testitem.py",
-    "media_path": "external::assets/media/rickroll.jpg",
+    "media_path": "image::assets/media/rickroll.jpg",
     "collectable": true
 }
