@@ -47,7 +47,7 @@ class GPS(Gadget):
         self.surf = game.surface(game.active_map.fmt[self.pos[0]][self.pos[1]]).name
 
     def __str__(self):
-        return f"Location: {self.loc}\n\nPosition: {self.pos}\n{self.surf}"
+        return f"Location: {self.loc}\n\nPosition: {self.pos}\n\nSurface: {self.surf}"
     
     def update(self, game, _):
         self.loc = game.active_map.name

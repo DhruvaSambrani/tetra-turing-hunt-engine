@@ -78,7 +78,7 @@ class Game:
                     size=(200, 200), 
                     element_justification="center"),
             ],
-            [sg.ProgressBar(100, orientation='h', size=(30, 20), bar_color = ("#939393", "#4D4D4D"), key='progressbar', pad = (305, 5))]
+            [sg.ProgressBar(100, orientation='h', size=(30, 20), bar_color = ("#939393", "#4D4D4D"), key='progressbar', pad = (90, 5))]
         ]
     def bind_sg_events(self):
         self.window.bind("<KeyPress-w>", "up")
