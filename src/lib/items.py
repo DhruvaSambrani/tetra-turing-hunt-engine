@@ -42,7 +42,7 @@ class Item():
 
 
     def render(self, game, collected=False):
-        win = sg.Window("Popup", layout=self.make_layout(collected), modal=True)
+        win = sg.Window("Found an item!", layout=self.make_layout(collected), modal=True, keep_on_top=True)
         successful = False
         while True:
             event,v = win.read()
@@ -50,12 +50,12 @@ class Item():
                 helpers.play_media(self.media_path)
             elif self.need_input and event=="Submit":
                 if hashlib.md5(win["in"].get().encode()).hexdigest() == self.answerhash:
-                    w = sg.Popup("Correct Answer")
+                    w = sg.popup_no_buttons("Correct Answer", auto_close = True, auto_close_duration = 2, no_titlebar = True, modal = True, background_color = "#4D4D4D",  keep_on_top=True)
                     successful = True
                     self.perform_success(game)
                     break
                 else:
-                    sg.Popup("Incorrect!")
+                    sg.popup_no_buttons("Incorrect!", auto_close = True, auto_close_duration = 2, no_titlebar = True, modal = True,  background_color = "#4D4D4D", keep_on_top=True)
             elif event=="Close" and not self.need_input:
                 self.perform_success(game)
                 successful = True
@@ -75,7 +75,6 @@ class Pocket():
     def item(self, t):
         return self.itemlist[self.itemlist.index(t)]
 
-
     def render(self, game):
         if len(self.itemlist) > 0:
             win = sg.Window(
@@ -89,9 +88,14 @@ class Pocket():
                     )],
                     [sg.Button("Close")]
                 ],
-                size = (750, 500),
+                size = (525, 525),
                 element_justification="right",
-                modal = True
+                modal = True,
+                no_titlebar = True,
+                keep_on_top = True,
+                button_color = ("#ffffff", "#4D4D4D"),
+                margins = (10, 10),
+                relative_location=(-97, 33)
             )
             while True:
                 event, values = win.read()

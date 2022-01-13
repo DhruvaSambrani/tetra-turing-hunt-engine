@@ -5,6 +5,6 @@
     "mapspath": "assets/maps",
     "surfacespath": "assets/surfaces",
     "transition_time": 10, 
-    "rest_energy": 5,
-    "walking_energy_cost": 1
+    "rest_energy": 2,
+    "walking_energy_cost": 0.095
 }
