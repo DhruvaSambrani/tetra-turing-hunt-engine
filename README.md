@@ -46,6 +46,6 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
 
 # Developing
 
-1. Install PySimpleGUI and numpy
+1. Install `PySimpleGUI`, `numpy`, `pillow`
 2. `cd src`
 3. Run `python3 libs/terminal.py`
