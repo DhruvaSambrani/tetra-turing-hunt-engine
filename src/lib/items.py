@@ -28,8 +28,8 @@ class Item():
             layout[3].append(sg.Button("Submit", expand_x=True))
         return layout
 
-    def perform_success(self, game):
-        if self.collectable:
+    def perform_success(self, game, collected):
+        if self.collectable and not collected:
             game.pocket.append(self)
         self.on_success_code_run(game)
 
@@ -52,12 +52,12 @@ class Item():
                 if hashlib.md5(win["in"].get().encode()).hexdigest() == self.answerhash:
                     w = sg.popup_no_buttons("Correct Answer", auto_close = True, auto_close_duration = 2, no_titlebar = True, modal = True, background_color = "#4D4D4D",  keep_on_top=True)
                     successful = True
-                    self.perform_success(game)
+                    self.perform_success(game, False)
                     break
                 else:
                     sg.popup_no_buttons("Incorrect!", auto_close = True, auto_close_duration = 2, no_titlebar = True, modal = True,  background_color = "#4D4D4D", keep_on_top=True)
-            elif event=="Close" and not self.need_input:
-                self.perform_success(game)
+            elif event=="Close" and (not self.need_input or collected):
+                self.perform_success(game, collected)
                 successful = True
                 break
             else:

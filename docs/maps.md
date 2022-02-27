@@ -20,9 +20,10 @@ A json file with a `.surface` suffix is used to store the metadata for each surf
 }
 ```
 
-If a surface file is created, it **must** have atleast these three properties, wherein `walkable` indicates whether the player can traverse over the tile. Additional properties may be added, accompanied by the code to handle these properties within the game to introduce new mechanics for these surfaces. (How?)
+If a surface file is created, it **must** have atleast these three properties, wherein `walkable` indicates whether the player can traverse over the tile. Additional properties may be added, accompanied by the code to handle these properties within the game to introduce new mechanics for these surfaces by editing the `libs/surfaces.py`
 
 #### Decoration tiles
+
 Some surface tiles may serve a purely aesthetic purpose and it becomes cumbersome to create  `.surface` files for all such tiles. Such surfaces are classified as a `Decoration` which is assigned by default if the `.surface` file for a specific unicode character does not exist. 
 
 The equivalent property list for any `<character>` which is a `Decoration` might look like so: 
@@ -35,6 +36,7 @@ The equivalent property list for any `<character>` which is a `Decoration` might
 }
 ```
 Now that we have dealt with the building blocks of a `Map`, let us move on to the actual `Map` object.
+
 ## Maps
 
 A json file with a `.map` suffix is used to store the metadata for each `Map` object. A typical map file will look like so:
@@ -119,7 +121,7 @@ The odd structure of this specification is due to limitations of json files, but
 **Another Note**: Although the process of constructing this data is cumbersome, you can use the in-built GPS gadget in the game to quickly identify the coordinates involved in these transitions.
 
 ### Items
-This field simply specifies the locations of various `Item` objects to be placed in the `Map`. Further details to create an `Item` object can be found in the [Items 101](items.md) section. 
+This field simply specifies the locations of various `Item` objects to be placed in the `Map`. Further details to create an `Item` object can be found in the [Items](items.md) section. 
 
 The `items` field is also a dictionary with key-pair values like so:
 ```
