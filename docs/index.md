@@ -1,4 +1,6 @@
 # Tetra - The Treasure Hunt Game Engine
 
-- [Maps](./maps.md)
-- [Index](./index.md)
+- [Maps](./maps)
+- [Items](./items)
+- [Game](./game)
+-
