@@ -64,7 +64,7 @@ class Game:
                     key="terminal",
                     text=self.active_map.render(self.settings), 
                     background_color="#282828", 
-                    font=("Source Code Pro", 11), 
+                    font=("FiraCode Nerd Font", 11), 
                     size=self.settings.viewport,  
                     relief="groove", 
                     border_width=8,
