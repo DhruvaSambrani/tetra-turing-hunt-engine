@@ -13,6 +13,7 @@ class Settings():
         self.transition_time = jsonobj["transition_time"]
         self.rest_energy = jsonobj["rest_energy"]
         self.walking_energy_cost = jsonobj["walking_energy_cost"]
+        self.gadget_classes = jsonobj["gadget_classes"]
 
 
     def itemfile(self, it):

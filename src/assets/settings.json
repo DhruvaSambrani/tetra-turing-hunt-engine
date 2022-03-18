@@ -6,5 +6,6 @@
     "surfacespath": "assets/surfaces",
     "transition_time": 10, 
     "rest_energy": 2,
-    "walking_energy_cost": 0.095
+    "walking_energy_cost": 0.095,
+    "gadget_classes": ["Clock", "GPS", "EnergyMeter"]
 }

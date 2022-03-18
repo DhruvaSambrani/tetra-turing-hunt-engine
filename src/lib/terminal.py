@@ -4,10 +4,10 @@ from maps import Map
 from items import Item, Pocket
 from surfaces import Surface, Decoration
 from settings import Settings
-from gadgets import Clock, GPS, EnergyMeter
+import gadgets
 
 class Game:
-    def __init__(self, title, settingsfile, gadget_classes, theme="Dark"):
+    def __init__(self, title, settingsfile, theme="Dark"):
         self.title = title
         self.settings = Settings(settingsfile)
         self.surfaces = [
@@ -22,7 +22,7 @@ class Game:
 
         self.active_map = self.map("Home")
         self.pocket = Pocket([])
-        self.gadgets = [G(self) for G in gadget_classes]
+        self.gadgets = [getattr(gadgets, G)(self) for G in self.settings.gadget_classes]
 
         sg.theme("dark")
 
@@ -120,4 +120,4 @@ class Game:
 
         self.window.close()
 
-Game("Turing Hunt 2022", "assets/settings.json", [Clock, GPS, EnergyMeter]).run()
+Game("Turing Hunt 2022", "assets/settings.json").run()
