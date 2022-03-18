@@ -37,7 +37,7 @@ class Item():
         # HIGHLY UNSAFE
         if not(self.code_file is None):
             print("Should eval now")
-            exec(compile(open(self.code_file).read(), self.code_file, "exec"))
+            exec(compile(open(self.code_file, encoding="utf-8").read(), self.code_file, "exec"))
 
 
 
