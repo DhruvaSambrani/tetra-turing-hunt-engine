@@ -13,7 +13,7 @@ def play_media(media_path):
             image.thumbnail((400, 400))
             bio = io.BytesIO()
             image.save(bio, format="PNG") 
-            w = sg.Window("Media", layout=[[sg.Image(bio.getvalue())]], modal=True, keep_on_top=True, finalize=True)
+            w = sg.Window("Media", layout=[[sg.Image(bio.getvalue())], [sg.Button("Close", expand_x=True)]], modal=True, keep_on_top=True, finalize=True)
             w.bind("<Escape>", "Close")
 
             while True:
