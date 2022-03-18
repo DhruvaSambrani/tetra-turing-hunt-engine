@@ -1,32 +1,55 @@
-# GTA - Stress City
-This is a Virtual Treasure Hunt game hosted by the Turing Club, made using a custom terminal-based engine, [Tetra](https://github.com/DhruvaSambrani/turing-hunt-engine).
+# Turing Hunt Engine
+
+This is an Engine for the Turing Hunt.
+
+The aim is to simplify the making of an interactive virtual hunt by splitting the data from the code.
 
 # Objectives
 
 ## Primary
 
-- [ ] Build the world with maps of all areas
-    - [ ] Link maps via transitions
-    - [ ] Make mini-map tool to see current location relative to the entire world 
-- [ ] Collate a list of clue-essential items
-    - [ ] Create media files for clue items
-    - [ ] Code the behaviour and location of items
-- [ ] Sample playtest to debug
+- [x] Start a terminal screen using PSGui
+- [x] Handle `Surface`s
+    - [x] Read surfaces.json and load all `Surface`s
+
+- [ ] Make a map displaying logic
+    - [x] Read map from file and display it on terminal screen
+    - [x] Read map metadata
+    - [x] Capture and react to the user movement input
+    - [x] Make sure map can be traversed only on `walkable` `Surface`s
+    - [x] Make map to map transitions
+    - [ ] Emit events for code to listen to
+
+- [x] Implement Pocket
+    - [x] Actual storage
+    - [x] Display Pocket
+
+- [ ] Implement Logging and LoggerView
+
+- [ ] Make item interaction logic
+    - [x] Read items from file and place in map
+    - [x] Interact with items on map
+    - [x] Display item interaction screen
+    - [x] Make interaction mechanics
+    - [x] Allow arbitrary code execution 
+    - [ ] document
+    - [x] Arbitrary output types
+    - [ ] Arbitrary input types
 
 ## Secondary 
 
-- [ ] Collate a list of non-essential fluff (world-building) items/NPCs
-    - [ ] Code the behaviour and location of items
-- [ ] Bug [Dhruva](https://github.com/DhruvaSambrani) to implement save states
+- [ ] Make game builders
+    - [x] Make bitmap -> map
+    - [ ] Make item builder
 
-## Misc. - not sure if necessary
-- [ ] Implement diagonal player movement
+- [ ] Implement Save game 
 
 # Developing
 
-1. Install `PySimpleGUI`, `numpy`, `pillow` and FiraCode Font provided in /assets.
+1. Install `PySimpleGUI`, `numpy`, `pillow`
 2. `cd src`
 3. Run `python3 libs/terminal.py`
+
 
 ## Trouble-shooting map rendering issues
 1. Make sure that you have installed FiraCode Nerd Font provided in /assets. 
