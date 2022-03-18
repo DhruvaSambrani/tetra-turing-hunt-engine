@@ -42,7 +42,8 @@ class Item():
 
 
     def render(self, game, collected=False):
-        win = sg.Window("Found an item!", layout=self.make_layout(collected), modal=True, keep_on_top=True)
+        win = sg.Window("Found an item!", layout=self.make_layout(collected), modal=True, keep_on_top=True, finalize=True)
+        win.bind("<Escape>", "Close")
         successful = False
         while True:
             event,v = win.read()
