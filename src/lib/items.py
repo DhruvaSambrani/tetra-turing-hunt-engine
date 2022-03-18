@@ -96,8 +96,11 @@ class Pocket():
                 keep_on_top = True,
                 button_color = ("#ffffff", "#4D4D4D"),
                 margins = (10, 10),
-                relative_location=(-97, 33)
+                relative_location=(-97, 33),
+                finalize = True
             )
+            win.bind("<Escape>", "Close")
+            
             while True:
                 event, values = win.read()
                 if event == sg.WIN_CLOSED or event == 'Exit' or event == "Close":
