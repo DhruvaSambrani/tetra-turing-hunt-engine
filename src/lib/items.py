@@ -25,7 +25,7 @@ class Item():
             layout[3].append(sg.Button("Play Media", expand_x=True))
         if self.need_input and not collected:
             layout[2].append(sg.Input(key="in", size=(50, None)))
-            layout[3].append(sg.Button("Submit", expand_x=True))
+            layout[3].append(sg.Button("Submit", expand_x=True, bind_return_key=True))
         return layout
 
     def perform_success(self, game, collected):
