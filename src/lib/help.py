@@ -12,11 +12,11 @@ class HelpDialog():
                 layout = [[sg.Text(
                     key="help",
                     text=self.text,
-                    font = "Helvetica 11",
+                    font = ("FiraCode Nerd Font", 10),
                     expand_x = True,
                     expand_y = True,
                     justification="left")]],
-                font = "10",
+                font = (sg.DEFAULT_FONT[0], "13"),
                 expand_x=True, 
                 expand_y=True, 
                 element_justification="center")],
