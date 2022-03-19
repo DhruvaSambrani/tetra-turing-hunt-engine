@@ -1,11 +1,10 @@
 import PySimpleGUI as sg
 import os
-from maps import Map
-from items import Item, Pocket
-from surfaces import Surface, Decoration
-from settings import Settings
-from help import HelpDialog
-import gadgets
+from .maps import Map
+from .items import Item, Pocket
+from .surfaces import Surface, Decoration
+from .settings import Settings
+from .help import HelpDialog
 
 class Game:
     def __init__(self, title, settingsfile, gadgets_list, theme="Dark"):
@@ -129,4 +128,3 @@ class Game:
 
         self.window.close()
 
-Game("Turing Hunt 2022", "assets/settings.json", [gadgets.Clock, gadgets.GPS, gadgets.EnergyMeter]).run()

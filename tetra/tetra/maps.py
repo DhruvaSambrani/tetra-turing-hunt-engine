@@ -1,8 +1,5 @@
 import json
-import os
 import numpy as np
-import PySimpleGUI as sg
-from items import Item
 from time import sleep
 
 def load(game, secs):

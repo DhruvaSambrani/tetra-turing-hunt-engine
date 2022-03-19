@@ -1,8 +1,7 @@
 import json
 import PySimpleGUI as sg
 import hashlib
-import helpers
-from time import sleep
+from . import helpers
 
 class Item():
     def __init__(self, itempath):

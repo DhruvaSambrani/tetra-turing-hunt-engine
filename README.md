@@ -45,9 +45,11 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
 
 # Developing
 
-1. Install `PySimpleGUI`, `numpy`, `pillow`
-2. `cd src`
-3. Run `python3 libs/terminal.py`
+1. Create a venv
+2. Install `PySimpleGUI`, `numpy`, `pillow`
+3. `cd src`
+4. Edit the `main.py` to your liking
+4. Run `python3 main.py`
 
 
 ## Trouble-shooting map rendering issues
