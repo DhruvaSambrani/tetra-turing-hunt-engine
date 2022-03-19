@@ -2,6 +2,7 @@ import json
 import PySimpleGUI as sg
 import hashlib
 import helpers
+from time import sleep
 
 class Item():
     def __init__(self, itempath):
@@ -51,12 +52,18 @@ class Item():
                 helpers.play_media(self.media_path)
             elif self.need_input and event=="Submit":
                 if hashlib.md5(win["in"].get().encode()).hexdigest() == self.answerhash:
-                    w = sg.popup_no_buttons("Correct Answer", auto_close = True, auto_close_duration = 2, no_titlebar = True, modal = True, background_color = "#4D4D4D",  keep_on_top=True)
+                    win["in"].update(background_color="#004f00")
+                    sg.popup_no_buttons("Incorrect!", auto_close = True, auto_close_duration = 0.75, no_titlebar = True, modal = True,  background_color = "#4D4D4D")
+                    win["in"].update(value = "", background_color="#4d4d4d")
+
                     successful = True
                     self.perform_success(game, False)
                     break
                 else:
-                    sg.popup_no_buttons("Incorrect!", auto_close = True, auto_close_duration = 2, no_titlebar = True, modal = True,  background_color = "#4D4D4D", keep_on_top=True)
+                    win["in"].update(value = "", background_color="#6b0618")
+                    sg.popup_no_buttons("Incorrect!", auto_close = True, auto_close_duration = 0.75, no_titlebar = True, modal = True,  background_color = "#4D4D4D")
+                    win["in"].update(value = "", background_color="#4d4d4d")
+
             elif event=="Close" and (not self.need_input or collected):
                 self.perform_success(game, collected)
                 successful = True
