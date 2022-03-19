@@ -2,3 +2,4 @@ textual.log
 src/scratchpad/
 __pycache__
 helpers/.ipynb_checkpoints
+*egg-info*
