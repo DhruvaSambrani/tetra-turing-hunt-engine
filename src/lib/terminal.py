@@ -8,7 +8,7 @@ from help import HelpDialog
 import gadgets
 
 class Game:
-    def __init__(self, title, settingsfile, theme="Dark"):
+    def __init__(self, title, settingsfile, gadgets_list, theme="Dark"):
         self.title = title
         self.settings = Settings(settingsfile)
         self.surfaces = [
@@ -23,9 +23,9 @@ class Game:
 
         self.active_map = self.map("Home")
         self.pocket = Pocket([])
-        self.gadgets = [getattr(gadgets, G)(self) for G in self.settings.gadget_classes]
+        self.gadgets = [G(self) for G in gadgets_list]
         self.help = HelpDialog(self.settings)
-        sg.theme("dark")
+        sg.theme(theme)
 
     def map(self, t, newpos=None):
         new_map = self.maps[self.maps.index(t)]
@@ -129,4 +129,4 @@ class Game:
 
         self.window.close()
 
-Game("Turing Hunt 2022", "assets/settings.json").run()
+Game("Turing Hunt 2022", "assets/settings.json", [gadgets.Clock, gadgets.GPS, gadgets.EnergyMeter]).run()
