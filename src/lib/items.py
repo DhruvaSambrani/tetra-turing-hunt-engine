@@ -3,6 +3,7 @@ import PySimpleGUI as sg
 import hashlib
 import helpers
 from time import sleep
+import textwrap
 
 class Item():
     def __init__(self, itempath):
@@ -79,18 +80,33 @@ class Item():
 class Pocket():
     def __init__(self, itemlist=None):
         self.itemlist = itemlist if itemlist is not None else []
+        self.active_item = None
 
     def item(self, t):
         return self.itemlist[self.itemlist.index(t)]
 
     def render(self, game):
         if len(self.itemlist) > 0:
+            word_ln = 50
             win = sg.Window(
                 title="Pocket",
                 layout = [
                     [sg.Frame(
                         "Pocket",
-                        layout=[[sg.Button(i.name, key=f"-ITEM-{i.name}", enable_events=True)] for i in self.itemlist],
+                        layout=[[
+                            sg.Frame("Items",
+                            layout = [[sg.Column(layout = [[sg.Button(i.name, key=f"-ITEM-{i.name}", enable_events=True, use_ttk_buttons=True, expand_x=True, button_color = ("#ffffff", "#4D4D4D"))] for i in self.itemlist],
+                            expand_y = True, scrollable = True, vertical_scroll_only=True, expand_x = True)]],
+                            expand_x=True, expand_y=True),
+                            sg.Frame("Description", 
+                            layout = [
+                                [sg.Column(key="desc_def", expand_x = True, expand_y = True, layout = [[sg.Text("No item currently selected.", size = (word_ln, None))]])] +
+                                [sg.Column(key="desc_no_media", expand_x = True, expand_y = True, layout = [[sg.Text("This item has no media files.", size = (word_ln, None))]], visible = False)] +
+                                [sg.Column(key="desc_no_use", expand_x = True, expand_y = True, layout = [[sg.Text("This item cannot be used right now.", size = (word_ln, None))]], visible = False)] +
+                                [sg.Column(key=f"desc_{i.name}", expand_x = True, expand_y = True, layout = [[sg.Text(i.name + "\n\n" + "\n".join(textwrap.wrap(i.desc, word_ln, fix_sentence_endings=True)), size = (word_ln, None))]], visible = False) for i in self.itemlist], 
+                                [sg.Button("Play Media", expand_x=True, use_ttk_buttons=True, button_color = ("#ffffff", "#4D4D4D")), sg.Button("Use Item", expand_x=True, use_ttk_buttons=True, button_color = ("#ffffff", "#4D4D4D"))]
+                            ], expand_x = True, expand_y = True, size = (250, None))
+                            ]],
                         expand_x = True, expand_y = True,
                         element_justification = "center"
                     )],
@@ -112,16 +128,50 @@ class Pocket():
                 event, values = win.read()
                 if event == sg.WIN_CLOSED or event == 'Exit' or event == "Close":
                     break
-                else:
-                    self.item(event[6:]).render(game, True)
+
+                if event == "Play Media":
+                    if(self.active_item != None):
+                        md_path = self.active_item.media_path
+
+                        if(md_path != None):
+                            helpers.play_media(md_path)
+                        else:
+                            self.show_desc(win, "no_media")
+                    else: 
+                        self.show_desc(win, "no_media")
+
+                if event == "Use Item":
+                    if(self.active_item != None):
+
+                        if(self.active_item.code_file != None):
+                            self.active_item.on_success_code_run(game)
+                            break
+                        else:
+                            self.show_desc(win, "no_use")
+                    else: 
+                        self.show_desc(win, "no_use")
+                    
+                elif(event[6:] in self.itemlist):
+                    self.active_item = self.item(event[6:])
+                    self.show_desc(win, self.active_item.name)
+
+                    # self.item(event[6:]).render(game, True)
+                    
+            self.active_item = None
             win.close()
         else:
             sg.popup_no_buttons("No items in Pocket. Broke, much like IISER.", auto_close = True, auto_close_duration = 4, no_titlebar = True, modal = True)
 
-    
+
+    def show_desc(self, win, name):
+        win["desc_def"].update(visible = False)
+        win["desc_no_media"].update(visible = False)
+        win["desc_no_use"].update(visible = False)
+        [win[f"desc_{i.name}"].update(visible = False) for i in self.itemlist]
+        win[f"desc_{name}"].update(visible = True)
+
     def append(self, item):
         self.itemlist.append(item)
 
     def drop(self, item):
         self.remove(item)
-
