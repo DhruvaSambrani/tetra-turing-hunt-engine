@@ -12,13 +12,12 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
 - [x] Handle `Surface`s
     - [x] Read surfaces.json and load all `Surface`s
 
-- [ ] Make a map displaying logic
+- [x] Make a map displaying logic
     - [x] Read map from file and display it on terminal screen
     - [x] Read map metadata
     - [x] Capture and react to the user movement input
     - [x] Make sure map can be traversed only on `walkable` `Surface`s
     - [x] Make map to map transitions
-    - [ ] Emit events for code to listen to
 
 - [x] Implement Pocket
     - [x] Actual storage
@@ -32,7 +31,7 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
     - [x] Display item interaction screen
     - [x] Make interaction mechanics
     - [x] Allow arbitrary code execution 
-    - [ ] document
+    - [x] document
     - [x] Arbitrary output types
     - [ ] Arbitrary input types
 
