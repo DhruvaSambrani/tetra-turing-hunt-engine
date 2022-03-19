@@ -2,6 +2,7 @@ import json
 import PySimpleGUI as sg
 import hashlib
 import helpers
+from time import sleep
 
 class Item():
     def __init__(self, itempath):
@@ -25,7 +26,7 @@ class Item():
             layout[3].append(sg.Button("Play Media", expand_x=True))
         if self.need_input and not collected:
             layout[2].append(sg.Input(key="in", size=(50, None)))
-            layout[3].append(sg.Button("Submit", expand_x=True))
+            layout[3].append(sg.Button("Submit", expand_x=True, bind_return_key=True))
         return layout
 
     def perform_success(self, game, collected):
@@ -37,12 +38,13 @@ class Item():
         # HIGHLY UNSAFE
         if not(self.code_file is None):
             print("Should eval now")
-            exec(compile(open(self.code_file).read(), self.code_file, "exec"))
+            exec(compile(open(self.code_file, encoding="utf-8").read(), self.code_file, "exec"))
 
 
 
     def render(self, game, collected=False):
-        win = sg.Window("Found an item!", layout=self.make_layout(collected), modal=True, keep_on_top=True)
+        win = sg.Window("Found an item!", layout=self.make_layout(collected), modal=True, keep_on_top=True, finalize=True)
+        win.bind("<Escape>", "Close")
         successful = False
         while True:
             event,v = win.read()
@@ -50,12 +52,18 @@ class Item():
                 helpers.play_media(self.media_path)
             elif self.need_input and event=="Submit":
                 if hashlib.md5(win["in"].get().encode()).hexdigest() == self.answerhash:
-                    w = sg.popup_no_buttons("Correct Answer", auto_close = True, auto_close_duration = 2, no_titlebar = True, modal = True, background_color = "#4D4D4D",  keep_on_top=True)
+                    win["in"].update(background_color="#004f00")
+                    sg.popup_no_buttons("Incorrect!", auto_close = True, auto_close_duration = 0.75, no_titlebar = True, modal = True,  background_color = "#4D4D4D")
+                    win["in"].update(value = "", background_color="#4d4d4d")
+
                     successful = True
                     self.perform_success(game, False)
                     break
                 else:
-                    sg.popup_no_buttons("Incorrect!", auto_close = True, auto_close_duration = 2, no_titlebar = True, modal = True,  background_color = "#4D4D4D", keep_on_top=True)
+                    win["in"].update(value = "", background_color="#6b0618")
+                    sg.popup_no_buttons("Incorrect!", auto_close = True, auto_close_duration = 0.75, no_titlebar = True, modal = True,  background_color = "#4D4D4D")
+                    win["in"].update(value = "", background_color="#4d4d4d")
+
             elif event=="Close" and (not self.need_input or collected):
                 self.perform_success(game, collected)
                 successful = True
@@ -95,8 +103,11 @@ class Pocket():
                 keep_on_top = True,
                 button_color = ("#ffffff", "#4D4D4D"),
                 margins = (10, 10),
-                relative_location=(-97, 33)
+                relative_location=(-97, 33),
+                finalize = True
             )
+            win.bind("<Escape>", "Close")
+            
             while True:
                 event, values = win.read()
                 if event == sg.WIN_CLOSED or event == 'Exit' or event == "Close":

@@ -48,3 +48,9 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
 1. Install `PySimpleGUI`, `numpy`, `pillow`
 2. `cd src`
 3. Run `python3 libs/terminal.py`
+
+
+## Trouble-shooting map rendering issues
+1. Make sure that you have installed FiraCode Nerd Font provided in /assets. 
+2. Run the `font_gallery.py` script provided in /helpers and verify that FiraCode is listed.  
+3. If the issue still persists, one of more of the unicode characters used in the map are not supported by FiraCode and have to be changed.

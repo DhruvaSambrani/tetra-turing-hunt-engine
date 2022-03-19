@@ -13,11 +13,15 @@ def play_media(media_path):
             image.thumbnail((400, 400))
             bio = io.BytesIO()
             image.save(bio, format="PNG") 
-            w = sg.Window("Media", layout=[[sg.Image(bio.getvalue())]], keep_on_top=True)
+            w = sg.Window("Media", layout=[[sg.Image(bio.getvalue())], [sg.Button("Close", expand_x=True)]], modal=True, keep_on_top=True, finalize=True)
+            w.bind("<Escape>", "Close")
+
             while True:
                 e, v = w.read()
-                if e == sg.WIN_CLOSED:
+                if e == sg.WIN_CLOSED or e == "Close":
                     break
+            w.close()
+
         elif media_type == "link":
             webbrowser.open(file_path)
         else:
