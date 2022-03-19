@@ -43,14 +43,19 @@ The aim is to simplify the making of an interactive virtual hunt by splitting th
 
 - [ ] Implement Save game 
 
-# Developing
+# Developing a Game
 
-1. Create a venv
-2. Install `PySimpleGUI`, `numpy`, `pillow`
-3. `cd src`
-4. Edit the `main.py` to your liking
-4. Run `python3 main.py`
+1. Create a directory
+2. Create a venv in the directory and activate it
+3. Install `PySimpleGUI`, `numpy`, `pillow`
+4. Clone this repository to a sibling directory
+5. run `pip install -e turing-hunt-engine`
+6. Make `yourgame/main.py` and `yourgame/assets/*` as per documentation. You can also refer to the `example_*` files in this repo
+7. Run as `python3 main.py`
 
+## For engine developers
+
+You can use the `example_main.py` file and `example_assets` to test the engine. Note that `assets` is symlinked to `example_assets`
 
 ## Trouble-shooting map rendering issues
 1. Make sure that you have installed FiraCode Nerd Font provided in /assets. 
