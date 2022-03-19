@@ -1,0 +1,6 @@
+{
+    "name": "Bottle",
+    "desc": "You found a light blue water bottle!",
+    "need_input": false,
+    "collectable": true
+}
