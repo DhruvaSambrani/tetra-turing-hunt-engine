@@ -3,4 +3,4 @@
 - [Maps](./maps)
 - [Items](./items)
 - [Game](./game)
-- [Gadgets](./gadget)
+- [Gadgets](./gadgets)
