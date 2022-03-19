@@ -1,27 +1,35 @@
-# Gadgets
+# Game
 
-Gadgets are shown to the left of the screen and update every step of the game. Therefore only fast updating code must be added to a Gadget. They help in adding elements to the game which need to be updated constantly without player interaction.
+```python
+class Game
+    title #:: Title of the window
+    active_map #:: the current map
+    gadgets #:: list of gadgets
+    map(name_of_map, newpos=None) #:: Set the active_map to `name_of_map`. If `newpos` is set, then player spawns there, else the default position.
+    surface(char_of_surface) #:: returns the surface with character `char_of_surface`
+    item(item_name) #:: returns the item with name `item_name`
+```
 
-All gadgets inherit from the `Gadget` class. 
+## Initializing a `Game` object
 
-The Gadget class provides the following functions-
+```py
+game = Game("Name of the game", "path_to_settings", [list, of, Gadget, Classes])
+```
 
-- `__init__(self, name)` - initializes the object with the name as `name`. Every inherited class must call `super().__init__("name")`
-- `__str__(self)` - to return the simplest text representation of the current state of the gadget.
-- `update(self, game, event)` - This is the function that is called in each update cycle. `game` holds the main [`Game`](./game) object, and `event` is the last `sg.Event`
-- `render_content(self)` - Returns an `PySimpleGUI` widget that is used by `render(self)`. By default it is a simple `sg.Text` with the `__str__` representation of the gadget.
-- `render(self)` - This returns a `sg.Frame` with the title as the `name` of the gadget and the content as the output of `render_content(self)`
+## Running a `Game` object
 
+```py
+game.run()
+```
 
-The simplest gadget would need to at least do the following-
+# The Game loop
 
-- Call `super().__init__("gadget_display_name")` in the `__init__` function. The `__init__` function MUST take only a [`Game`](./game) object.
-- Overload `__str__(self)`
+1. Create the layout by `Game.make_layout`
+2. Place layout into a window
+3. Bind `sg` events to human readable events with `Game.bind_sg_events()`
+4. Loop until `st`
+  1. Wait for a `sg` event.
+  2. `game.handle_event(event)` and return new value of `st`
+  3. `game.update_gadgets(event)`
 
-Though most gadgets are more complex than this, most of them can be implemented by simply overloading `update` and `__str__`. If the output has to also be changed to some other form of `PySimpleGUI` widget, then `render_content` needs to be overloaded. `update` will also need to be overloaded to update the `PySimpleGUI` widget appropriately.
-
-Obviously, inherited classes can have other properties added to them initialized in `__init__` as usual.
-
-## Adding Gadgets to a `Game`
-
-Simply send a list of class names(not objects) to the `gadget_classes` parameter of the `Game()` function.
+You can overload any function in an inherited class, but this would generally not be necessary.
