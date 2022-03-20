@@ -63,7 +63,7 @@ class Map:
     def place_item(self, item_name, game):
         if not (item_name in self.items.values()):
             coord = list(self.items_ref.keys())[list(self.items_ref.values()).index(item_name)]
-            self.fmt[coord] = game.item(item_name).char
+            if(game.item(item_name).char != None): self.fmt[coord] = game.item(item_name).char
             self.items[tuple(coord)] = self.items_ref[tuple(coord)]
 
     def remove_item(self, item_name, game):

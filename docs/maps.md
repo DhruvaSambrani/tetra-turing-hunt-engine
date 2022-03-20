@@ -66,7 +66,8 @@ A json file with a `.map` suffix is used to store the metadata for each `Map` ob
     "items": {
         "Teleporter": [13, 47],
         "Shoe": [11, 47]
-    }
+    },
+    "items_on_startup": ["Teleporter"]
 }
 ```
 
@@ -137,6 +138,17 @@ A typical specification with multiple items looks like so:
     "Mirror": [16, 34]
 }
 ```
+### Items on startup
+This (optional)field is an array, listing the names of the items in the map that will be spawned on start up. Items specified in the previous field can be dynamically spawned/removed during the game like so (in the code files of some other item):
+
+```
+game.active_map.place_item("Teleporter", game)
+game.active_map.remove_item("Teleporter", game)
+```
+
+Any items to be dynamically altered *must* be specified in the map file beforehand (in the previous `items` field); an arbitrary item created during runtime *cannot* be placed on the map. 
+
+**Note:** If the `items_on_startup` field is not specified, all items mentioned in the `items` field will be spawned on start up.
 
 # Making your own Maps
 Now that we know how to provide the meta-data for a `Map` object, how do we create the Raw text map? It is quite cumbersome to type out each character by hand, so we have written a Map Creation Tool which is a jupyter notebook that facilitates this process. It can be found in the path `/helpers/map_creation_tool.ipynb`. 
