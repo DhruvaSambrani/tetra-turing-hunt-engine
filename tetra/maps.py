@@ -24,16 +24,23 @@ def clamp(p, r, c):
     return [min(max(0, p[0]), r-1), min(max(0, p[1]), c-1)]
 
 class Map:
-    def __init__(self, filepath, settings, pos = None):
+    def __init__(self, filepath, settings, game, pos = None):
         with open(filepath, encoding = 'utf-8') as fh:
             jsonobj = json.load(fh, strict=False)
         self.name = jsonobj["name"]
-        self.fmt = np.stack([list(elt) for elt in jsonobj["raw"].splitlines()]) #formatted map as np grid
-        self.r, self.c = self.fmt.shape #map size
+        self.fmt_ref = np.stack([list(elt) for elt in jsonobj["raw"].splitlines()]) #formatted map as np grid
+        self.r, self.c = self.fmt_ref.shape #map size
         self.pos = np.array(jsonobj["init_pos"]) if (pos is None) else pos #player pos
-        self.items = {tuple(jsonobj["items"][it_name]): it_name for it_name in jsonobj["items"].keys()}
+        self.items_ref = {tuple(jsonobj["items"][it_name]): it_name for it_name in jsonobj["items"].keys()}
         self.exits = jsonobj["exits"] #dict of exit coords and new map
         self.exit_coords = [[int(x) for x in elt.split(",")] for elt in jsonobj["exits"].keys()] #list of exit points
+
+        self.fmt = np.stack([list(elt) for elt in jsonobj["raw"].splitlines()])
+        self.items = {}
+
+        items_on_startup = jsonobj.get("items_on_startup", self.items_ref.values())
+        for item_name in items_on_startup:
+            self.place_item(item_name, game)
 
     def __eq__(self, t):
         return t == self.name
@@ -52,14 +59,26 @@ class Map:
         block[r_rel : (r_rel + mini_r), c_rel : (c_rel + mini_c)] = mini
         block[vr//2, vc//2] = settings.player
         return "\n".join(["".join(elt) for elt in block.tolist()])
-    
+
+    def place_item(self, item_name, game):
+        if not (item_name in self.items.values()):
+            coord = list(self.items_ref.keys())[list(self.items_ref.values()).index(item_name)]
+            self.fmt[coord] = game.item(item_name).char
+            self.items[tuple(coord)] = self.items_ref[tuple(coord)]
+
+    def remove_item(self, item_name, game):
+        if(item_name in self.items.values()):
+            coord = list(self.items_ref.keys())[list(self.items_ref.values()).index(item_name)]
+            self.fmt[coord] = self.fmt_ref[coord]
+            self.items.pop(tuple(coord))
+
     def activate_item_here(self, game):
         nowpos = [self.pos[0], self.pos[1]]
         i =  self.items.get(tuple(nowpos), None)
         if not (i is None):
             to_remove = game.item(i).render(game)
             if to_remove:
-                self.items.pop(tuple(nowpos))
+                self.remove_item(i, game)
 
     def iswalkable(self, new_pos, game):
         return game.surface(self.fmt[new_pos[0]][new_pos[1]]).walkable

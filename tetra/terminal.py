@@ -14,12 +14,11 @@ class Game:
             Surface(self.settings.surfacefile(i))
             for i in os.listdir(self.settings.surfacespath)
         ]
-        self.maps = [Map(self.settings.mapfile(i), self.settings) for i in os.listdir(self.settings.mapspath)]
         self.items = [
             Item(self.settings.itemfile(i))
             for i in os.listdir(self.settings.itemspath) if ".item" in i
         ]
-
+        self.maps = [Map(self.settings.mapfile(i), self.settings, self) for i in os.listdir(self.settings.mapspath)]
         self.active_map = self.map("Home")
         self.pocket = Pocket([])
         self.gadgets = [G(self) for G in gadgets_list]

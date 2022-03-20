@@ -9,6 +9,7 @@ class Item():
         jsonobj = json.loads(open(itempath, encoding="utf-8").read())
         self.name = jsonobj["name"]
         self.desc = jsonobj["desc"]
+        self.char = jsonobj.get("char", "?")
         self.media_path = jsonobj.get("media_path", None)
         self.need_input = jsonobj["need_input"]
         self.answerhash = jsonobj.get("answerhash", None)
