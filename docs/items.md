@@ -10,6 +10,7 @@ Every item is associted with a `.item` file. A `.item` file is simply a json fil
 {
 name: "string",
 desc: "string",
+char: "string",
 need_input: boolean,
 collectable: boolean,
 answerhash: "[string]",
@@ -19,11 +20,12 @@ code_file: "[string]"
 ```
 
 1. `name`, `desc` are self explanatory
-2. `need_input` tells the game engine whether an input bar is to be displayed when the item is interacted with
-3. `collectable` tells the game engine if the item is to be put into the [Pocket][#pocket] when interaction is [successful](#interaction)
-4. `answerhash` is an optional parameter which is the correct "answer". [See more](#answerhash)
-5. `media_path` is an optional parameter which gives information about the media that is associated with the item. [See more](#media)
-6. `code_file` is an optional parameter which gives the path to the `.py` file that is run when the item [interation](#interaction) is successful. [See more](#item-coding)
+2. `char` is the display character of the item. If not specified, it defaults to '?'. It can be set to `None` for invisible items.
+3. `need_input` tells the game engine whether an input bar is to be displayed when the item is interacted with
+4. `collectable` tells the game engine if the item is to be put into the [Pocket][#pocket] when interaction is [successful](#interaction)
+5. `answerhash` is an optional parameter which is the correct "answer". [See more](#answerhash)
+6. `media_path` is an optional parameter which gives information about the media that is associated with the item. [See more](#media)
+7. `code_file` is an optional parameter which gives the path to the `.py` file that is run when the item [interation](#interaction) is successful. [See more](#item-coding)
 
 
 ## Pocket
