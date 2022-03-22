@@ -81,7 +81,7 @@ class Map:
                 self.remove_item(i, game)
 
     def iswalkable(self, new_pos, game):
-        return game.surface(self.fmt[new_pos[0]][new_pos[1]]).walkable
+        return game.surface(self.fmt_ref[new_pos[0]][new_pos[1]]).walkable
 
     def move(self, code, game):
         dir = {
