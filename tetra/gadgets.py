@@ -78,7 +78,13 @@ class EnergyMeter(Gadget):
     def render_content(self):
         return sg.ProgressBar(self.val, orientation='h', size=(30, 10), key=self.name.lower(), expand_x = True, pad = 10)
     
-    def update(self, game, event):
+    def update(self, game, e):
+        event = {
+            "up": "MOVE",
+            "down": "MOVE",
+            "left": "MOVE",
+            "right": "MOVE",
+        }.get(e, "IDLE")
         if event == "IDLE":
             delta = game.settings.rest_energy
         else:

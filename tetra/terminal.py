@@ -39,18 +39,8 @@ class Game:
     def item(self, t):
         return self.items[self.items.index(t)]
 
-    def translate_event(self, event):
-        d = {
-            "up": "MOVE",
-            "down": "MOVE",
-            "left": "MOVE",
-            "right": "MOVE",
-        }
-        return d.get(event, "IDLE")
-
     def update_gadgets(self, event):
-        ev = self.translate_event(event)
-        [g.update(self, ev) for g in self.gadgets]
+        [g.update(self, event) for g in self.gadgets]
 
 
     def make_layout(self):
@@ -79,6 +69,7 @@ class Game:
             [sg.ProgressBar(100, orientation='h', size=(30, 20), bar_color = ("#939393", "#4D4D4D"), key='progressbar', pad = (90, 5)),
              sg.Button("Help", key="OPEN-HELP", button_color = ("#ffffff", "#4D4D4D"), expand_x=True, pad=((13, 4),(3, 0)))]
         ]
+
     def bind_sg_events(self):
         self.window.bind("<KeyPress-w>", "up")
         self.window.bind("<KeyPress-a>", "left")
