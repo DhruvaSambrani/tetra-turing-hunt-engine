@@ -7,7 +7,7 @@ from .settings import Settings
 from .help import HelpDialog
 
 class Game:
-    def __init__(self, title, settingsfile, gadgets_list, theme="Dark"):
+    def __init__(self, title, settingsfile, gadgets_list, first_map=None, theme="Dark"):
         self.title = title
         self.settings = Settings(settingsfile)
         self.surfaces = [
@@ -19,7 +19,7 @@ class Game:
             for i in os.listdir(self.settings.itemspath) if ".item" in i
         ]
         self.maps = [Map(self.settings.mapfile(i), self.settings, self) for i in os.listdir(self.settings.mapspath)]
-        self.active_map = self.map("Home")
+        self.active_map = self.map(first_map) if first_map else None
         self.pocket = Pocket([])
         self.gadgets = [G(self) for G in gadgets_list]
         self.help = HelpDialog(self.settings)
@@ -47,7 +47,7 @@ class Game:
         glayout = [[sg.Button("Pocket", key="OPEN-POCKET", button_color = ("#ffffff", "#4D4D4D"), expand_x=True)]]
         glayout.extend(g.render() for g in self.gadgets)
         self.layout = [
-            [sg.Text(self.title, expand_x=True, justification="center", font="FiraCode\ Nerd\ Fonts 15")],
+            [sg.Text(self.title, expand_x=True, justification="center", font=r"FiraCode\ Nerd\ Fonts 15")],
             [
                 sg.Text(
                     key="terminal",
@@ -89,7 +89,7 @@ class Game:
         if event == sg.WIN_CLOSED or event == 'Exit':
             return False
         elif event in ["up", "down", "left", "right"]:
-            self.active_map = self.active_map.move(event, self)
+            self.active_map.move(event, self)
             self.window["terminal"].update(self.active_map.render(self.settings))
         elif event == "OPEN-POCKET":
             self.pocket.render(self)

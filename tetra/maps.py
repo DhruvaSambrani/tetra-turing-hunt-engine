@@ -74,11 +74,13 @@ class Map:
 
     def activate_item_here(self, game):
         nowpos = [self.pos[0], self.pos[1]]
-        i =  self.items.get(tuple(nowpos), None)
+        i = self.items.get(tuple(nowpos), None)
         if not (i is None):
             to_remove = game.item(i).render(game)
             if to_remove:
                 self.remove_item(i, game)
+            return True
+        return False
 
     def iswalkable(self, new_pos, game):
         return game.surface(self.fmt_ref[new_pos[0]][new_pos[1]]).walkable
@@ -89,16 +91,14 @@ class Map:
             "down": [1, 0],
             "left": [0, -1],
             "right": [0, 1]
-            }
+        }
         new_pos = clamp(self.pos + np.array(dir[code]), self.r, self.c)
         
         if self.iswalkable(new_pos, game):
             self.pos = new_pos
-            self.activate_item_here(game)
+            item_here = self.activate_item_here(game)
 
-            if any(elt == list(new_pos) for elt in self.exit_coords):
+            if not item_here or any(elt == list(new_pos) for elt in self.exit_coords):
                 new_pos_key = ",".join(np.char.mod('%i', new_pos))
                 transitionAnim(game, 0.0001)
-                return game.map(self.exits[new_pos_key][0], self.exits[new_pos_key][1])
-
-        return self
+                game.active_map = game.map(self.exits[new_pos_key][0], self.exits[new_pos_key][1])

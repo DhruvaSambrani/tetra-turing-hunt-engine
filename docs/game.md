@@ -5,7 +5,7 @@ class Game
     title #:: Title of the window
     active_map #:: the current map
     gadgets #:: list of gadgets
-    map(name_of_map, newpos=None) #:: Set the active_map to `name_of_map`. If `newpos` is set, then player spawns there, else the default position.
+    map(name_of_map, newpos=None) #:: return the map `name_of_map`. If `newpos` is set to map.pos, else the previous position.
     surface(char_of_surface) #:: returns the surface with character `char_of_surface`
     item(item_name) #:: returns the item with name `item_name`
 ```
@@ -13,8 +13,13 @@ class Game
 ## Initializing a `Game` object
 
 ```py
-game = Game("Name of the game", "path_to_settings", [list, of, Gadget, Classes])
+game = Game("Name of the game", "path_to_settings", [list, of, Gadget, Classes], first_map=None, theme="Dark")
 ```
+
+See [gadgets](./gadgets) for some demo gadgets you may want to add
+
+`first_map` corresponds to the name of the first [map](./maps) where the player is spawned.
+If `first_map` is not set, `active_map` will be `None`. You must then set the `active_map` yourself before calling `game.run()`
 
 ## Running a `Game` object
 

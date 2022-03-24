@@ -25,3 +25,14 @@ Obviously, inherited classes can have other properties added to them initialized
 ## Adding Gadgets to a `Game`
 
 Simply send a list of class names(not objects) to the `gadget_classes` parameter of the `Game()` function.
+
+## Demo Gadgets
+
+As a demonstration, we have some inbuilt gadgets that you may want to use
+
+- Clock
+- GPS
+- EnergyMeter - This requires the settings file to have the following settings with the example values -
+    - `"rest_energy": 2,`
+    - `"walking_energy_cost": 0.095,`
+
