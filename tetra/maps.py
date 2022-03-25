@@ -98,7 +98,7 @@ class Map:
             self.pos = new_pos
             item_here = self.activate_item_here(game)
 
-            if not item_here or any(elt == list(new_pos) for elt in self.exit_coords):
+            if not item_here and any(elt == list(new_pos) for elt in self.exit_coords):
                 new_pos_key = ",".join(np.char.mod('%i', new_pos))
                 transitionAnim(game, 0.0001)
                 game.active_map = game.map(self.exits[new_pos_key][0], self.exits[new_pos_key][1])
