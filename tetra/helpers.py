@@ -4,6 +4,7 @@ import os
 import io
 import sys
 import webbrowser
+import subprocess
 
 def play_media(media_path):
     if not (media_path is None):
@@ -25,7 +26,26 @@ def play_media(media_path):
         elif media_type == "link":
             webbrowser.open(file_path)
         else:
-            if sys.platform=="windows":
-                os.startfile(file_path)
-            else:
-                os.system("xdg-open "+file_path)
+            open_with_default_app(file_path)
+
+
+def get_platform():
+    if sys.platform == 'linux':
+        try:
+            proc_version = open('/proc/version').read()
+            if 'Microsoft' in proc_version:
+                return 'wsl'
+        except:
+            pass
+    return sys.platform
+
+def open_with_default_app(filename):
+    platform = get_platform()
+    if platform == 'darwin':
+        subprocess.call(('open', filename))
+    elif platform in ['win64', 'win32']:
+        os.startfile(filename.replace('/','\\'))
+    elif platform == 'wsl':
+        subprocess.call('cmd.exe /C start'.split() + [filename])
+    else:                                   # linux variants
+        subprocess.call(('xdg-open', filename))
