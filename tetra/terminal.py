@@ -63,7 +63,7 @@ class Game:
                     title="Gadgets", 
                     layout=glayout, 
                     expand_y=True, 
-                    size=(200, 200), 
+                    size=(400, 400), 
                     element_justification="center"),
             ],
             [sg.ProgressBar(100, orientation='h', size=(30, 20), bar_color = ("#939393", "#4D4D4D"), key='progressbar', pad = (90, 5)),
