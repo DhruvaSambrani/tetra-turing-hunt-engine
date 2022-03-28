@@ -20,7 +20,7 @@ class Game:
         ]
         self.maps = [Map(self.settings.mapfile(i), self.settings, self) for i in os.listdir(self.settings.mapspath)]
         self.active_map = self.map(first_map) if first_map else None
-        self.pocket = Pocket([])
+        self.pocket = Pocket([it for it in self.items])
         self.gadgets = [G(self) for G in gadgets_list]
         self.help = HelpDialog(self.settings)
         sg.theme(theme)
@@ -47,7 +47,6 @@ class Game:
         glayout = [[sg.Button("Pocket", key="OPEN-POCKET", button_color = ("#ffffff", "#4D4D4D"), expand_x=True)]]
         glayout.extend(g.render() for g in self.gadgets)
         self.layout = [
-            [sg.Text(self.title, expand_x=True, justification="center", font=r"FiraCode\ Nerd\ Fonts 15")],
             [
                 sg.Text(
                     key="terminal",
@@ -67,7 +66,7 @@ class Game:
                     element_justification="center"),
             ],
             [sg.ProgressBar(100, orientation='h', size=(30, 20), bar_color = ("#939393", "#4D4D4D"), key='progressbar', pad = (90, 5)),
-             sg.Button("Help", key="OPEN-HELP", button_color = ("#ffffff", "#4D4D4D"), expand_x=True, pad=((13, 4),(3, 0)))]
+             sg.Button("Help", key="OPEN-HELP", button_color = ("#ffffff", "#4D4D4D"), expand_x = True, pad=((13, 4),(3, 0)))]
         ]
 
     def bind_sg_events(self):
@@ -94,7 +93,7 @@ class Game:
         elif event == "OPEN-POCKET":
             self.pocket.render(self)
         elif event == "OPEN-HELP":
-            self.help.render()
+            self.help.render(self)
             pass
         else:
             pass
@@ -107,10 +106,11 @@ class Game:
                 self.layout,
                 use_default_focus=False,
                 finalize = True,
-                grab_anywhere = False
+                grab_anywhere = True
         )
         self.bind_sg_events()
         st = True
+
         while st:
             event, _ = self.window.read(timeout = 1000)
             st = self.handle_event(event)
