@@ -31,8 +31,8 @@ class HelpDialog():
             button_color = ("#ffffff", "#4D4D4D"),
             margins = (5, 5),
             location = 
-            (game.window.current_location()[0] + (game.window.size[0] - game.window["terminal"].get_size()[0] - game.window["gadget_frame"].get_size()[0]),
-            game.window.current_location()[1] + 55),
+            (game.window.current_location()[0] + (game.window.size[0] - game.window["terminal"].get_size()[0] - game.window["gadget_frame"].get_size()[0] - 14),
+            game.window.current_location()[1] + 57),
             finalize = True,
         )
 
