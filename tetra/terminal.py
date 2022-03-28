@@ -20,7 +20,7 @@ class Game:
         ]
         self.maps = [Map(self.settings.mapfile(i), self.settings, self) for i in os.listdir(self.settings.mapspath)]
         self.active_map = self.map(first_map) if first_map else None
-        self.pocket = Pocket([])
+        self.pocket = Pocket([it for it in self.items])
         self.gadgets = [G(self) for G in gadgets_list]
         self.help = HelpDialog(self.settings)
         sg.theme(theme)
@@ -44,12 +44,15 @@ class Game:
 
 
     def make_layout(self):
-        glayout = [[sg.Button("Pocket", key="OPEN-POCKET", button_color = ("#ffffff", "#4D4D4D"), expand_x=True)]]
+        glayout = [[]]
         glayout.extend(g.render() for g in self.gadgets)
         self.layout = [
-            [sg.Text(self.title, expand_x=True, justification="center", font=r"FiraCode\ Nerd\ Fonts 15")],
             [
-                sg.Text(
+                sg.Frame(
+                    key="main_game",
+                    title="",
+                    layout=[
+                    [sg.Text(
                     key="terminal",
                     text=self.active_map.render(self.settings), 
                     background_color="#282828", 
@@ -57,17 +60,30 @@ class Game:
                     size=self.settings.viewport,  
                     relief="groove", 
                     border_width=8,
-                    justification="center"),
+                    justification="center")],
+                    [sg.ProgressBar(100, orientation='h', size=(30, 20), bar_color = ("#939393", "#4D4D4D"), key='progressbar', pad = (90, 5))]
+                    ],
+                    border_width=0
+                ),
                 sg.Frame(
-                    key="gadget_frame", 
-                    title="Gadgets", 
-                    layout=glayout, 
-                    expand_y=True, 
-                    size=(400, 400), 
-                    element_justification="center"),
-            ],
-            [sg.ProgressBar(100, orientation='h', size=(30, 20), bar_color = ("#939393", "#4D4D4D"), key='progressbar', pad = (90, 5)),
-             sg.Button("Help", key="OPEN-HELP", button_color = ("#ffffff", "#4D4D4D"), expand_x=True, pad=((13, 4),(3, 0)))]
+                    key="utils",
+                    layout = [[
+                    sg.Button("Pocket", key="OPEN-POCKET", button_color = ("#ffffff", "#4D4D4D"), expand_x=True)],
+                    [sg.Frame(
+                        key="gadget_frame", 
+                        title="Gadgets", 
+                        layout=glayout, 
+                        expand_y=True, 
+                        size=(400, 400), 
+                        element_justification="center"),
+                    ],
+                    [sg.Button("Help", key="OPEN-HELP", button_color = ("#ffffff", "#4D4D4D"), expand_x = True)]
+                    ],
+                    title="",
+                    expand_y=True,
+                    element_justification="center",
+                    border_width=0),
+            ]  
         ]
 
     def bind_sg_events(self):
@@ -94,7 +110,7 @@ class Game:
         elif event == "OPEN-POCKET":
             self.pocket.render(self)
         elif event == "OPEN-HELP":
-            self.help.render()
+            self.help.render(self)
             pass
         else:
             pass
@@ -107,10 +123,11 @@ class Game:
                 self.layout,
                 use_default_focus=False,
                 finalize = True,
-                grab_anywhere = False
+                grab_anywhere = True
         )
         self.bind_sg_events()
         st = True
+
         while st:
             event, _ = self.window.read(timeout = 1000)
             st = self.handle_event(event)

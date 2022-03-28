@@ -112,14 +112,16 @@ class Pocket():
                     )],
                     [sg.Button("Close")]
                 ],
-                size = (525, 525),
+                size = (game.window["terminal"].get_size()[0] - 35, game.window["terminal"].get_size()[1] - 30),
                 element_justification="right",
                 modal = True,
                 no_titlebar = True,
                 keep_on_top = True,
                 button_color = ("#ffffff", "#4D4D4D"),
                 margins = (10, 10),
-                relative_location=(-97, 33),
+                location=(
+                game.window.current_location()[0] + (game.window.size[0] - game.window["terminal"].get_size()[0] - game.window["gadget_frame"].get_size()[0] - 14),
+                game.window.current_location()[1] + 57),
                 finalize = True
             )
             win.bind("<Escape>", "Close")
