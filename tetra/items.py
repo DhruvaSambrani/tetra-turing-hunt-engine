@@ -54,7 +54,7 @@ class Item():
             elif self.need_input and event=="Submit":
                 if hashlib.md5(win["in"].get().encode()).hexdigest() == self.answerhash:
                     win["in"].update(background_color="#004f00")
-                    sg.popup_no_buttons("Incorrect!", auto_close = True, auto_close_duration = 0.75, no_titlebar = True, modal = True,  background_color = "#4D4D4D")
+                    sg.popup_no_buttons("Correct!", auto_close = True, auto_close_duration = 1, no_titlebar = True, modal = True,  background_color = "#4D4D4D")
                     win["in"].update(value = "", background_color="#4d4d4d")
 
                     successful = True
@@ -62,7 +62,7 @@ class Item():
                     break
                 else:
                     win["in"].update(value = "", background_color="#6b0618")
-                    sg.popup_no_buttons("Incorrect!", auto_close = True, auto_close_duration = 0.75, no_titlebar = True, modal = True,  background_color = "#4D4D4D")
+                    sg.popup_no_buttons("Incorrect!", auto_close = True, auto_close_duration = 1, no_titlebar = True, modal = True,  background_color = "#4D4D4D")
                     win["in"].update(value = "", background_color="#4d4d4d")
 
             elif event=="Close" and (not self.need_input or collected):
