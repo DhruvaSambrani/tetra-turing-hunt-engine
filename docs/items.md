@@ -37,8 +37,8 @@ The game always initializes with no items in the `Pocket`.
 The function
 
 ```py
-Pocket.append(itemname, game)
-Pocket.remove(itemname, game)
+Pocket.append(item)
+Pocket.remove(item)
 ```
 
 ## Interaction

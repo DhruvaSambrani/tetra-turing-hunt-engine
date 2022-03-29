@@ -172,8 +172,8 @@ class Pocket():
         [win[f"desc_{i.name}"].update(visible = False) for i in self.itemlist]
         win[f"desc_{name}"].update(visible = True)
 
-    def append(self, itemname, game):
-        self.itemlist.append(game.item(itemname))
+    def append(self, item):
+        self.itemlist.append(item)
 
-    def drop(self, itemname, game):
-        self.itemlist.remove(game.item(itemname))
+    def drop(self, item):
+        self.remove(item)
