@@ -6,7 +6,9 @@ import textwrap
 
 class Item():
     def __init__(self, itempath):
+        print(f"Initing {itempath}")
         jsonobj = json.loads(open(itempath, encoding="utf-8").read())
+        print(f"""    name: {jsonobj["name"]}""")
         self.name = jsonobj["name"]
         self.desc = jsonobj["desc"]
         self.char = jsonobj.get("char", "?")
@@ -52,7 +54,7 @@ class Item():
             if event == "Play Media":
                 helpers.play_media(self.media_path)
             elif self.need_input and event=="Submit":
-                if hashlib.md5(win["in"].get().encode()).hexdigest() == self.answerhash:
+                if hashlib.md5(win["in"].get().lower().encode()).hexdigest() == self.answerhash:
                     win["in"].update(background_color="#004f00")
                     sg.popup_no_buttons("Correct!", auto_close = True, auto_close_duration = 1, no_titlebar = True, modal = True,  background_color = "#4D4D4D")
                     win["in"].update(value = "", background_color="#4d4d4d")

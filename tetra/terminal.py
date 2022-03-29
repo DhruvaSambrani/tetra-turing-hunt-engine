@@ -18,7 +18,9 @@ class Game:
             Item(self.settings.itemfile(i))
             for i in os.listdir(self.settings.itemspath) if ".item" in i
         ]
+        print(f"Read {len(self.items)} items")
         self.maps = [Map(self.settings.mapfile(i), self.settings, self) for i in os.listdir(self.settings.mapspath)]
+        print(f"Read {len(self.maps)} maps")
         self.active_map = self.map(first_map) if first_map else None
         self.pocket = Pocket()
         self.gadgets = [G(self) for G in gadgets_list]
