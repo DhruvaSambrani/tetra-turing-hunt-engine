@@ -32,7 +32,14 @@ code_file: "[string]"
 
 Pocket is a list of items that are "collected" by the user. This can be used to record what the user has seen, or to retain items which may be useful for the user to progress in the game. Pocket items can be [reinteracted](#interaction) with. Items can be marked as collectable in the [`.item` file](#.item-files) or can be added manually via [code file](#item-coding).
 
-The game always starts with no items in the `Pocket`.
+The game always initializes with no items in the `Pocket`.
+
+The function
+
+```py
+Pocket.append(itemname, game)
+Pocket.remove(itemname, game)
+```
 
 ## Interaction
 
