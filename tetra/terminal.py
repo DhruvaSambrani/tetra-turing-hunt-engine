@@ -20,7 +20,7 @@ class Game:
         ]
         self.maps = [Map(self.settings.mapfile(i), self.settings, self) for i in os.listdir(self.settings.mapspath)]
         self.active_map = self.map(first_map) if first_map else None
-        self.pocket = Pocket([it for it in self.items])
+        self.pocket = Pocket()
         self.gadgets = [G(self) for G in gadgets_list]
         self.help = HelpDialog(self.settings)
         sg.theme(theme)
