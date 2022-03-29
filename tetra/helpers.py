@@ -11,7 +11,7 @@ def play_media(media_path):
         media_type, file_path = media_path.split("::")
         if media_type == "image":
             image = Image.open(file_path)
-            image.thumbnail((1400, 1400))
+            image.thumbnail((800, 800))
             bio = io.BytesIO()
             image.save(bio, format="PNG") 
             w = sg.Window("Media", layout=[[sg.Image(bio.getvalue())], [sg.Button("Close", expand_x=True)]], modal=True, keep_on_top=True, finalize=True)
