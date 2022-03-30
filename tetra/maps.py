@@ -31,6 +31,7 @@ class Map:
         self.name = jsonobj["name"]
         self.fmt_ref = np.stack([list(elt) for elt in jsonobj["raw"].splitlines()]) #formatted map as np grid
         self.r, self.c = self.fmt_ref.shape #map size
+        self.init_pos = np.array(jsonobj["init_pos"])
         self.pos = np.array(jsonobj["init_pos"]) if (pos is None) else pos #player pos
         self.items_ref = {tuple(jsonobj["items"][it_name]): it_name for it_name in jsonobj["items"].keys()}
         self.exits = jsonobj["exits"] #dict of exit coords and new map
