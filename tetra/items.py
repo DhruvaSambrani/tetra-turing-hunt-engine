@@ -43,8 +43,6 @@ class Item():
             print("Should eval now")
             exec(compile(open(self.code_file, encoding="utf-8").read(), self.code_file, "exec"))
 
-
-
     def render(self, game, collected=False):
         win = sg.Window("Found an item!", layout=self.make_layout(collected), modal=True, keep_on_top=True, finalize=True)
         win.bind("<Escape>", "Close")
@@ -67,11 +65,12 @@ class Item():
                     sg.popup_no_buttons("Incorrect!", auto_close = True, auto_close_duration = 1, no_titlebar = True, modal = True,  background_color = "#4D4D4D")
                     win["in"].update(value = "", background_color="#4d4d4d")
 
-            elif event=="Close" and (not self.need_input or collected):
+            elif (event=="Close" or event is None) and (not self.need_input or collected):
                 self.perform_success(game, collected)
                 successful = True
                 break
             else:
+                print(f"Unhandled Event: {event}!")
                 break
         win.close()
         return successful and self.collectable
