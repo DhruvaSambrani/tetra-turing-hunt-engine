@@ -121,7 +121,7 @@ class Game:
     def run(self):
         self.make_layout()
         self.window = sg.Window(
-                'Turing Hunt',
+                self.title,
                 self.layout,
                 use_default_focus=False,
                 finalize = True,
