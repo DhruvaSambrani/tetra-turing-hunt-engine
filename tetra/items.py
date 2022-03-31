@@ -4,6 +4,13 @@ import hashlib
 from . import helpers
 import textwrap
 
+class DocumentWrapper(textwrap.TextWrapper):
+
+    def wrap(self, text):
+        split_text = text.split('\n')
+        lines = [line for para in split_text for line in textwrap.TextWrapper.wrap(self, para)]
+        return lines
+
 class Item():
     def __init__(self, itempath):
         print(f"Initing {itempath}")
@@ -88,7 +95,7 @@ class Pocket():
 
     def render(self, game):
         if len(self.itemlist) > 0:
-            word_ln = 50
+            word_ln = 75
             win = sg.Window(
                 title="Pocket",
                 layout = [
@@ -104,7 +111,7 @@ class Pocket():
                                 [sg.Column(key="desc_def", expand_x = True, expand_y = True, layout = [[sg.Text("No item currently selected.", size = (word_ln, None))]])] +
                                 [sg.Column(key="desc_no_media", expand_x = True, expand_y = True, layout = [[sg.Text("This item has no media files.", size = (word_ln, None))]], visible = False)] +
                                 [sg.Column(key="desc_no_use", expand_x = True, expand_y = True, layout = [[sg.Text("This item cannot be used right now.", size = (word_ln, None))]], visible = False)] +
-                                [sg.Column(key=f"desc_{i.name}", expand_x = True, expand_y = True, layout = [[sg.Text(i.name + "\n\n" + "\n".join(textwrap.wrap(i.desc, word_ln, fix_sentence_endings=True)), size = (word_ln, None))]], visible = False) for i in self.itemlist], 
+                                [sg.Column(key=f"desc_{i.name}", expand_x = True, expand_y = True, layout = [[sg.Text(i.name + "\n\n" + DocumentWrapper(width=word_ln).fill(i.desc), size = (word_ln, None))]], visible = False) for i in self.itemlist], 
                                 [sg.Button("Play Media", expand_x=True, use_ttk_buttons=True, button_color = ("#ffffff", "#4D4D4D")), sg.Button("Use Item", expand_x=True, use_ttk_buttons=True, button_color = ("#ffffff", "#4D4D4D"))]
                             ], expand_x = True, expand_y = True, size = (250, None))
                             ]],
