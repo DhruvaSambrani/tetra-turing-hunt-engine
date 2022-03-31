@@ -63,7 +63,7 @@ class Game:
                     relief="groove", 
                     border_width=8,
                     justification="center")],
-                    [sg.ProgressBar(100, orientation='h', size=(30, 20), bar_color = ("#939393", "#4D4D4D"), key='progressbar', pad = (90, 5))]
+                    [sg.ProgressBar(100, orientation='h', size=(30, 20), bar_color = ("#939393", "#4D4D4D"), key='progressbar', pad = (90, 5), expand_x = True)]
                     ],
                     border_width=0
                 ),
