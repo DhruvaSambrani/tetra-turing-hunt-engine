@@ -177,4 +177,4 @@ class Pocket():
         self.itemlist.append(item)
 
     def drop(self, item):
-        self.remove(item)
+        self.itemlist.remove(item)
