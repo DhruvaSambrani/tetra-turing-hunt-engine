@@ -8,9 +8,9 @@ def load(game, secs):
     while(True):
         game.window["progressbar"].UpdateBar(counter + 4)
         sleep(secs/100)
-        counter += 2
+        counter += 3.5
 
-        if(counter == 102):
+        if(counter > 100):
             break
 
 def transitionAnim(game, secs):
