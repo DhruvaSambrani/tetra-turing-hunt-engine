@@ -25,7 +25,6 @@ def clamp(p, r, c):
 
 class Map:
     def __init__(self, filepath, settings, game, pos = None):
-        print(f"initing {filepath}")
         with open(filepath, encoding = 'utf-8') as fh:
             jsonobj = json.load(fh, strict=False)
         self.name = jsonobj["name"]

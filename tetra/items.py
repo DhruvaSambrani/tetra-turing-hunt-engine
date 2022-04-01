@@ -13,9 +13,7 @@ class DocumentWrapper(textwrap.TextWrapper):
 
 class Item():
     def __init__(self, itempath):
-        print(f"Initing {itempath}")
         jsonobj = json.loads(open(itempath, encoding="utf-8").read())
-        print(f"""    name: {jsonobj["name"]}""")
         self.name = jsonobj["name"]
         self.desc = jsonobj["desc"]
         self.char = jsonobj.get("char", "?")
@@ -47,7 +45,6 @@ class Item():
     def on_success_code_run(self, game):
         # HIGHLY UNSAFE
         if not(self.code_file is None):
-            print("Should eval now")
             exec(compile(open(self.code_file, encoding="utf-8").read(), self.code_file, "exec"))
 
     def render(self, game, collected=False):
@@ -77,7 +74,6 @@ class Item():
                 successful = True
                 break
             else:
-                print(f"Unhandled Event: {event}!")
                 break
         win.close()
         return successful and self.collectable
