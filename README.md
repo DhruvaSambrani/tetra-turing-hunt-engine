@@ -1,4 +1,4 @@
-# Turing Hunt Engine
+# Tetra: The Turing Hunt Engine
 
 This is an Engine for the Turing Hunt.
 
